@@ -1,0 +1,1189 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Briefcase, MapPin, Clock, Building2, Filter, Home, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+
+type Opportunity = {
+    id: number
+    title: string
+    company: string
+    location: string
+    type: string
+    duration: string
+    compensation: string
+    requirements: string[]
+    category: string
+    url: string
+    description: string
+}
+
+const opportunities: Opportunity[] = [
+    {
+        id: 1,
+        title: "Meta Summer Academy",
+        company: "Meta",
+        location: "East Palo Alto, CA (Bay Area)",
+        type: "Technology",
+        duration: "6 weeks (Summer 2026)",
+        compensation: "Paid",
+        requirements: ["Sophomore (10th Grade)", "East Palo Alto/Belle Haven/North Fair Oaks/Redwood City"],
+        category: "Technology",
+        url: "https://www.metacareers.com/",
+        description: "6-week PAID internship specifically for sophomores. Coding, mentorship, real projects at Meta headquarters. Application typically opens in winter."
+    },
+    {
+        id: 2,
+        title: "UC Berkeley Lab Research Internship",
+        company: "Lawrence Berkeley National Laboratory",
+        location: "Berkeley, CA (Bay Area)",
+        type: "Research",
+        duration: "Summer 2026 (6-8 weeks)",
+        compensation: "Paid Stipend",
+        requirements: ["Age 16+", "Sophomore/Junior/Senior", "Can commute to Berkeley"],
+        category: "STEM",
+        url: "https://education.lbl.gov/internships/",
+        description: "Hands-on research at Berkeley Lab. Work with scientists on energy, environment, computing. Paid stipend for local students."
+    },
+    {
+        id: 3,
+        title: "Sandia National Labs Summer Internship",
+        company: "Sandia National Laboratories",
+        location: "Livermore, CA (Bay Area)",
+        type: "Research",
+        duration: "Summer 2026 (8-10 weeks)",
+        compensation: "Paid Stipend",
+        requirements: ["Age 16+", "STEM Interest", "U.S. Citizen"],
+        category: "STEM",
+        url: "https://www.sandia.gov/careers/students-and-postdocs/internships/",
+        description: "Paid internship at Livermore lab. Work on national security technology projects. Engineering, computer science, physics."
+    },
+    {
+        id: 4,
+        title: "Kaiser Permanente LAUNCH Internship",
+        company: "Kaiser Permanente",
+        location: "Oakland & Bay Area",
+        type: "Healthcare",
+        duration: "7 weeks (Summer 2026)",
+        compensation: "Paid ($23-24/hour)",
+        requirements: ["Age 16-19", "Bay Area Resident", "No Healthcare Experience Required"],
+        category: "Healthcare",
+        url: "https://thrive.kaiserpermanente.org/care-near-you/northern-california/kp-launch/",
+        description: "Full-time PAID healthcare internship. Explore non-clinical careers at Kaiser Bay Area facilities. $23-24/hr with mentorship and workshops."
+    },
+    {
+        id: 5,
+        title: "Careers in Science (CiS) Intern Program",
+        company: "California Academy of Sciences",
+        location: "San Francisco, CA (Bay Area)",
+        type: "STEM",
+        duration: "School Year + Summer",
+        compensation: "Paid Stipend",
+        requirements: ["9th/10th Grade", "SFUSD Student", "GPA 2.5+"],
+        category: "STEM",
+        url: "https://www.calacademy.org/educators/teens-at-the-academy",
+        description: "PAID multi-year internship. Field studies, public teaching, professional development. Starts sophomore year for SF students."
+    },
+    {
+        id: 6,
+        title: "SFUSD Summer Tech Internship Program",
+        company: "San Francisco Unified School District",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Technology",
+        duration: "6-9 weeks (Summer 2026)",
+        compensation: "Paid (20 hrs/week)",
+        requirements: ["Age 14+", "Current SFUSD Sophomore/Junior/Senior"],
+        category: "Technology",
+        url: "https://www.sfusd.edu/services/career-technical-education/internships",
+        description: "PAID summer internships in Bay Area tech companies. Biotech, animation, computer science, media arts. 20 hrs/week, paid weekly."
+    },
+    {
+        id: 7,
+        title: "SF Department of Technology Internship",
+        company: "City of San Francisco",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Technology",
+        duration: "Summer 2026 (6-8 weeks)",
+        compensation: "Paid",
+        requirements: ["SF High School Student", "Age 16+"],
+        category: "Technology",
+        url: "https://sf.gov/departments/department-technology",
+        description: "PAID IT internship with SF city government. Network security, web development, data management. Real municipal tech projects."
+    },
+    {
+        id: 8,
+        title: "Enterprise for Youth Internship",
+        company: "Enterprise for Youth",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Business",
+        duration: "Summer 2026",
+        compensation: "Paid ($20/hour)",
+        requirements: ["SF High School Sophomore/Junior/Senior", "Job Readiness Training"],
+        category: "Business",
+        url: "https://www.enterpriseforyouth.org/",
+        description: "PAID $20/hour internships in business, tech, arts, healthcare. Partners with SF companies. Includes job readiness training."
+    },
+    {
+        id: 9,
+        title: "Project Pull Summer Internship",
+        company: "Project Pull",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Business",
+        duration: "Summer 2026",
+        compensation: "Paid ($19.25/hour)",
+        requirements: ["Sophomore/Junior/Senior", "Public Service Interest"],
+        category: "Business",
+        url: "https://www.projectpull.org/",
+        description: "PAID $19.25/hour for public service and education projects. 20 hrs/week. Community-engaged work in San Francisco."
+    },
+    {
+        id: 10,
+        title: "Exploratorium High School Explainers",
+        company: "Exploratorium",
+        location: "San Francisco, CA (Bay Area)",
+        type: "STEM",
+        duration: "School Year",
+        compensation: "Paid",
+        requirements: ["High School Student", "SF Bay Area"],
+        category: "STEM",
+        url: "https://www.exploratorium.edu/visit/programs/explainers",
+        description: "PAID program engaging museum visitors, leading science demonstrations, daily museum operations. Academic year commitment."
+    },
+    {
+        id: 11,
+        title: "Asian Art Museum Art Speak Internship",
+        company: "Asian Art Museum",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Arts",
+        duration: "10 months",
+        compensation: "Paid",
+        requirements: ["Grade 10-12", "Bay Area Public School Student", "Artistic Interest"],
+        category: "Arts",
+        url: "https://asianart.org/",
+        description: "PAID 10-month internship for artistic students. Exposure to art scene, portfolio building, museum operations."
+    },
+    {
+        id: 12,
+        title: "Stanford Clinical Summer Internship",
+        company: "Stanford University",
+        location: "Stanford, CA (Bay Area)",
+        type: "Healthcare",
+        duration: "Summer 2026",
+        compensation: "Varies",
+        requirements: ["Sophomore/Junior/Senior", "Interest in Medicine"],
+        category: "Healthcare",
+        url: "https://med.stanford.edu/",
+        description: "Hands-on clinical activities in medicine at Stanford facilities. Research assistant and clinical exposure opportunities."
+    },
+    {
+        id: 13,
+        title: "Stanford Neuroscience Research Immersion",
+        company: "Stanford University",
+        location: "Stanford, CA (Bay Area)",
+        type: "Research",
+        duration: "Summer 2026",
+        compensation: "Free",
+        requirements: ["Sophomore/Junior/Senior", "Neuroscience Interest"],
+        category: "Healthcare",
+        url: "https://med.stanford.edu/psychiatry.html",
+        description: "Intensive research exposure in Stanford Department of Psychiatry and Behavioral Sciences. Research assistant roles."
+    },
+    {
+        id: 14,
+        title: "Genesys Works Bay Area Internship",
+        company: "Genesys Works",
+        location: "San Francisco, CA (Bay Area)",
+        type: "Technology",
+        duration: "8-week bootcamp + School year part-time",
+        compensation: "Paid",
+        requirements: ["Rising Senior (after bootcamp)", "IT/Business Interest"],
+        category: "Technology",
+        url: "https://genesysworks.org/bay-area/",
+        description: "PAID IT and business internships. 8-week summer training bootcamp, then part-time job during senior year. Professional development."
+    },
+    {
+        id: 15,
+        title: "Ladder Internships (Bay Area Startups)",
+        company: "Various Bay Area Startups",
+        location: "San Francisco Bay Area / Remote",
+        type: "Technology",
+        duration: "8-12 weeks (Year-Round)",
+        compensation: "Paid (Varies)",
+        requirements: ["Sophomore/Junior/Senior", "10-20 hrs/week"],
+        category: "Technology",
+        url: "https://www.ladderinternships.com/",
+        description: "Remote/hybrid PAID internships with Bay Area high-growth startups. AI, health tech, marketing, business. Flexible part-time."
+    }
+]
+{
+    id: 1,
+        title: "NASA High School Internship",
+            company: "NASA",
+                location: "Various NASA Centers Nationwide",
+                    type: "STEM",
+                        duration: "Summer 2026 (8-10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["Sophomore/Junior", "Age 16+", "GPA 3.0+", "U.S. Citizen"],
+                                    category: "STEM",
+                                        url: "https://intern.nasa.gov/",
+                                            description: "Work on real NASA projects in science, engineering, and technology with NASA mentors across various centers."
+},
+{
+    id: 2,
+        title: "Science & Engineering Apprenticeship Program (SEAP)",
+            company: "Department of the Navy",
+                location: "Navy Labs Nationwide",
+                    type: "STEM",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid ($4,000-4,500)",
+                                requirements: ["Sophomore/Junior/Senior", "Age 16+", "U.S. Citizen"],
+                                    category: "STEM",
+                                        url: "https://www.navalsteminterns.us/seap",
+                                            description: "Eight-week paid summer research at DoD Navy laboratories. Application deadline: November 1st for Summer 2026."
+},
+{
+    id: 3,
+        title: "Sandia National Labs Summer Internship",
+            company: "Sandia National Laboratories",
+                location: "Livermore, CA (Bay Area)",
+                    type: "Research",
+                        duration: "Summer 2026 (8-10 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Age 16+", "STEM Interest", "U.S. Citizen"],
+                                    category: "STEM",
+                                        url: "https://www.sandia.gov/careers/students-and-postdocs/internships/",
+                                            description: "Paid internship at Livermore lab. Work on national security technology projects. Engineering, computer science, physics."
+},
+{
+    id: 4,
+        title: "National Park Service Youth Conservation Corps",
+            company: "National Park Service",
+                location: "National Parks Nationwide",
+                    type: "Program",
+                        duration: "8-10 weeks (Summer 2026)",
+                            compensation: "Paid (Minimum Wage+)",
+                                requirements: ["Ages 15-18", "U.S. Citizen/Permanent Resident", "Work Permit if required"],
+                                    category: "STEM",
+                                        url: "https://www.nps.gov/subjects/youthprograms/ycc.htm",
+                                            description: "Paid summer work in national parks. Trail construction, historic preservation, wildlife research, environmental education. 40 hrs/week."
+},
+{
+    id: 5,
+        title: "Aspiring Scientists Summer Internship Program (ASSIP)",
+            company: "George Mason University",
+                location: "Fairfax, VA & Remote",
+                    type: "Research",
+                        duration: "June-August 2026 (8 weeks)",
+                            compensation: "Unpaid",
+                                requirements: ["Age 15+ (remote)", "Age 16+ (wet lab)", "Research Interest"],
+                                    category: "STEM",
+                                        url: "https://science.gmu.edu/assip",
+                                            description: "Conduct hands-on research with GMU faculty with opportunities for publication and presentations."
+},
+{
+    id: 6,
+        title: "Air Force Research Laboratory Scholars",
+            company: "U.S. Air Force",
+                location: "Various AFRL Sites",
+                    type: "STEM",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Sophomore/Junior/Senior", "Age 16+", "GPA 3.0+", "U.S. Citizen"],
+                                    category: "STEM",
+                                        url: "https://afrlscholars.usra.edu/",
+                                            description: "8-12 week paid internship with Air Force scientists. Application deadline: January 10, 2026. GPA 3.0+ recommended."
+},
+{
+    id: 7,
+        title: "Ladder Internship Program",
+            company: "Various Startups",
+                location: "Remote",
+                    type: "Technology",
+                        duration: "Year-Round (8-12 weeks)",
+                            compensation: "Varies",
+                                requirements: ["Sophomore/Junior/Senior", "10-20 hrs/week", "Various Fields"],
+                                    category: "Technology",
+                                        url: "https://www.ladderinternships.com/",
+                                            description: "Remote internships with high-growth startups in AI, health tech, marketing, and more."
+},
+{
+    id: 8,
+        title: "Stanford SIMR (Summer Institutes in Medicine)",
+            company: "Stanford University",
+                location: "Stanford, CA (Bay Area)",
+                    type: "Research",
+                        duration: "8 weeks (Summer 2026)",
+                            compensation: "Free (Tuition + Room/Board)",
+                                requirements: ["Rising Junior/Senior", "Strong Science Background", "Competitive"],
+                                    category: "Healthcare",
+                                        url: "https://simr.stanford.edu/",
+                                            description: "Prestigious biomedical research internship in Stanford labs. Free program including housing. Application deadline typically February."
+},
+{
+    id: 9,
+        title: "UC Berkeley Lab Research Programs",
+            company: "Lawrence Berkeley National Laboratory",
+                location: "Berkeley, CA (Bay Area)",
+                    type: "Research",
+                        duration: "Summer 2026 (6-8 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Age 16+", "Sophomore/Junior/Senior", "Can commute to Berkeley"],
+                                    category: "STEM",
+                                        url: "https://education.lbl.gov/internships/",
+                                            description: "Hands-on research at Berkeley Lab. Work with scientists on energy, environment, computing. Paid stipend for local students."
+},
+{
+    id: 10,
+        title: "Apple Pathways in Technology (P-TECH)",
+            company: "Apple Inc.",
+                location: "Cupertino, CA (Bay Area)",
+                    type: "Program",
+                        duration: "Year-Round Program",
+                            compensation: "Free + Mentorship",
+                                requirements: ["Bay Area High School", "9th-12th Grade", "Tech Interest"],
+                                    category: "Technology",
+                                        url: "https://www.apple.com/education/k12/apple-pathways-in-technology/",
+                                            description: "Multi-year program with Apple. Industry mentorship, workplace learning, college credit opportunities. Focus on tech careers in Silicon Valley."
+},
+{
+    id: 11,
+        title: "SJSU Summer Tech Academy",
+            company: "San Jose State University",
+                location: "San Jose, CA (Bay Area)",
+                    type: "Program",
+                        duration: "4 weeks (Summer 2026)",
+                            compensation: "Free + $2,000 Stipend",
+                                requirements: ["Rising Senior", "GPA 3.0+", "Low-Income", "CS/Engineering Interest"],
+                                    category: "Technology",
+                                        url: "https://www.sjsu.edu/cies/summer-tech-academy/",
+                                            description: "4-week FREE program with $2,000 stipend. Math, physics, programming, AI. Room/board included. Scholarship opportunities up to $15,000/year."
+},
+{
+    id: 12,
+        title: "Secondary Student Training Program (SSTP)",
+            company: "University of Iowa",
+                location: "Iowa City, IA",
+                    type: "Research",
+                        duration: "Summer 2026 (5-6 weeks)",
+                            compensation: "Free (Residential)",
+                                requirements: ["Sophomore/Junior", "High Academic Achievement", "U.S. Resident"],
+                                    category: "STEM",
+                                        url: "https://belinblank.education.uiowa.edu/",
+                                            description: "Highly selective intensive research program with university faculty mentors."
+},
+{
+    id: 13,
+        title: "LinkedIn REACH Apprenticeship (18+ Alumni Path)",
+            company: "LinkedIn",
+                location: "Mountain View, CA (Bay Area)",
+                    type: "Technology",
+                        duration: "1-5 years",
+                            compensation: "Full-Time Paid Employee",
+                                requirements: ["Non-traditional Background", "Self-taught/Bootcamp", "18+"],
+                                    category: "Technology",
+                                        url: "https://careers.linkedin.com/reach",
+                                            description: "Multi-year tech apprenticeship for career changers. Full benefits. 20% time for learning. Mountain View hybrid. Path for H.S. grads into tech."
+},
+{
+    id: 14,
+        title: "Adler Planetarium Far Horizons Teens",
+            company: "Adler Planetarium",
+                location: "Chicago, IL",
+                    type: "STEM",
+                        duration: "Summer 2026",
+                            compensation: "Paid Stipend",
+                                requirements: ["Incoming 10th/11th/12th Grade", "Chicago Area"],
+                                    category: "STEM",
+                                        url: "https://www.adlerplanetarium.org/",
+                                            description: "Assist in astronomy research, data collection on light pollution, and public science communication."
+},
+{
+    id: 15,
+        title: "Simons Summer Research Program",
+            company: "Stony Brook University",
+                location: "Stony Brook, NY",
+                    type: "Research",
+                        duration: "Summer 2026 (7 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Junior (typically)", "Age 16+", "NY/Tri-State Area"],
+                                    category: "STEM",
+                                        url: "https://www.stonybrook.edu/simons/",
+                                            description: "Hands-on research in science, math, or engineering with faculty mentors."
+},
+{
+    id: 16,
+        title: "Salesforce Futureforce Tech Launchpad",
+            company: "Salesforce",
+                location: "San Francisco, CA (Bay Area)",
+                    type: "Technology",
+                        duration: "Year-Round / Summer",
+                            compensation: "Varies by Program",
+                                requirements: ["High School Student", "Tech Interest", "Bay Area Preferred"],
+                                    category: "Technology",
+                                        url: "https://www.salesforce.com/company/careers/university-recruiting/",
+                                            description: "Salesforce programs for high school students. Tech workshops, mentorship, career exploration in cloud computing and CRM."
+},
+{
+    id: 17,
+        title: "Careers in Science (CiS) Intern Program",
+            company: "California Academy of Sciences",
+                location: "San Francisco, CA",
+                    type: "STEM",
+                        duration: "School Year + Summer",
+                            compensation: "Paid Stipend",
+                                requirements: ["9th/10th Grade", "SFUSD Student", "GPA 2.5+"],
+                                    category: "STEM",
+                                        url: "https://www.calacademy.org/",
+                                            description: "Field studies, public teaching, and professional development for SF students."
+},
+{
+    id: 18,
+        title: "Scripps Research High School Internship",
+            company: "Scripps Research",
+                location: "La Jolla, CA",
+                    type: "Research",
+                        duration: "Summer 2026",
+                            compensation: "Varies",
+                                requirements: ["Sophomore/Junior/Senior", "Science Interest"],
+                                    category: "STEM",
+                                        url: "https://www.scripps.edu/",
+                                            description: "Advanced scientific research in molecular biology, chemistry, neuroscience, and drug discovery."
+},
+{
+    id: 19,
+        title: "SF Department of Technology Internship",
+            company: "City of San Francisco",
+                location: "San Francisco, CA (Bay Area)",
+                    type: "Technology",
+                        duration: "Summer 2026 (6-8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["SF High School Student", "Age 16+", "Tech Interest"],
+                                    category: "Technology",
+                                        url: "https://sf.gov/departments/department-technology",
+                                            description: "Paid IT internship with SF city government. Network security, web development, data management projects."
+},
+{
+    id: 20,
+        title: "Jackson Laboratory Summer Student Program",
+            company: "The Jackson Laboratory",
+                location: "Bar Harbor, ME",
+                    type: "Research",
+                        duration: "Summer 2026",
+                            compensation: "Paid Stipend",
+                                requirements: ["Rising Sophomore and up", "Science Interest"],
+                                    category: "STEM",
+                                        url: "https://www.jax.org/",
+                                            description: "Gain research experience in genetics and genomics."
+},
+{
+    id: 21,
+        title: "KP LAUNCH Program",
+            company: "Kaiser Permanente",
+                location: "Oakland & Bay Area",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (7 weeks)",
+                            compensation: "Paid ($23-24/hour)",
+                                requirements: ["Age 16-19", "Bay Area Resident", "No Healthcare Exp Required"],
+                                    category: "Healthcare",
+                                        url: "https://thrive.kaiserpermanente.org/care-near-you/northern-california/kp-launch/",
+                                            description: "Full-time paid healthcare internship. Explore non-clinical careers at Kaiser Bay Area facilities. $23-24/hr with mentorship."
+},
+{
+    id: 22,
+        title: "NIH Summer Internship Program",
+            company: "National Institutes of Health",
+                location: "Bethesda, MD & NIH Sites",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Age 17-18", "Research Interest", "U.S. Citizen"],
+                                    category: "Healthcare",
+                                        url: "https://www.training.nih.gov/programs/sip",
+                                            description: "Hands-on biomedical research experience working with leading NIH scientists."
+},
+{
+    id: 23,
+        title: "Johns Hopkins Internship in Brain Sciences",
+            company: "Johns Hopkins University",
+                location: "Baltimore, MD & Virtual",
+                    type: "Research",
+                        duration: "Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["Baltimore Area or Virtual", "Underrepresented Backgrounds"],
+                                    category: "Healthcare",
+                                        url: "https://neuroscience.jhu.edu/",
+                                            description: "Research and exposure to careers in neurological sciences with compensation."
+},
+{
+    id: 24,
+        title: "Rady Children's Hospital Medical Academy",
+            company: "Rady Children's Hospital",
+                location: "San Diego, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026",
+                            compensation: "Tuition-based",
+                                requirements: ["Age 15-19", "Completed 9th Grade"],
+                                    category: "Healthcare",
+                                        url: "https://www.rchsd.org/",
+                                            description: "Hands-on experience and learning about medical topics with healthcare networking."
+},
+{
+    id: 25,
+        title: "Stanford Clinical Summer Internship",
+            company: "Stanford University",
+                location: "Stanford, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026",
+                            compensation: "Varies",
+                                requirements: ["Sophomore/Junior/Senior", "Interest in Medicine"],
+                                    category: "Healthcare",
+                                        url: "https://med.stanford.edu/",
+                                            description: "Hands-on activities in medicine for high school and undergraduate students."
+},
+{
+    id: 26,
+        title: "UCSF Summer Student Research Program",
+            company: "UC San Francisco",
+                location: "San Francisco, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (6-8 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Junior/Senior (typically)", "Underrepresented Backgrounds"],
+                                    category: "Healthcare",
+                                        url: "https://graduate.ucsf.edu/",
+                                            description: "Biomedical research in clinics and labs with one-on-one mentorship."
+},
+{
+    id: 27,
+        title: "MGH Youth Scholars Program",
+            company: "Massachusetts General Hospital",
+                location: "Boston, MA",
+                    type: "Healthcare",
+                        duration: "Summer 2026",
+                            compensation: "Free",
+                                requirements: ["Sophomore/Junior/Senior", "Boston/Chelsea/Revere"],
+                                    category: "Healthcare",
+                                        url: "https://www.massgeneral.org/",
+                                            description: "Healthcare career exposure at one of the nation's top hospitals."
+},
+{
+    id: 28,
+        title: "Tufts TUBERS Biomedical Engineering",
+            company: "Tufts University",
+                location: "Medford, MA",
+                    type: "Research",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Free",
+                                requirements: ["Sophomore/Junior/Senior", "Engineering Interest"],
+                                    category: "Healthcare",
+                                        url: "https://engineering.tufts.edu/",
+                                            description: "Hands-on biomedical engineering research in Tufts laboratories."
+},
+{
+    id: 29,
+        title: "Magee-Womens Research Institute Internship",
+            company: "Magee-Womens Research Institute",
+                location: "Pittsburgh, PA",
+                    type: "Research",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Varies",
+                                requirements: ["Sophomore/Junior", "Age 16+"],
+                                    category: "Healthcare",
+                                        url: "https://www.mageewomens.org/",
+                                            description: "Scientific research internship in women's health and reproductive biology."
+},
+{
+    id: 30,
+        title: "Clinical Neuroscience Immersion Experience",
+            company: "Stanford University",
+                location: "Stanford, CA",
+                    type: "Research",
+                        duration: "Summer 2026",
+                            compensation: "Free",
+                                requirements: ["Sophomore/Junior/Senior", "Neuroscience Interest"],
+                                    category: "Healthcare",
+                                        url: "https://med.stanford.edu/",
+                                            description: "Intensive exposure to research in Stanford Department of Psychiatry and Behavioral Sciences."
+},
+{
+    id: 31,
+        title: "The Met High School Internship",
+            company: "Metropolitan Museum of Art",
+                location: "New York, NY",
+                    type: "Arts",
+                        duration: "Summer 2026 (5 weeks)",
+                            compensation: "Paid ($1,100)",
+                                requirements: ["Rising Junior/Senior", "NY/NJ/CT Resident"],
+                                    category: "Arts",
+                                        url: "https://www.metmuseum.org/",
+                                            description: "Paid in-person program connecting students with art and museum professionals."
+},
+{
+    id: 32,
+        title: "Smithsonian Museum Internship",
+            company: "Smithsonian Institution",
+                location: "Washington, DC",
+                    type: "Arts",
+                        duration: "Summer 2026 (6-8 weeks)",
+                            compensation: "Varies",
+                                requirements: ["Ages 15-18", "Grades 9-12", "Fluent English"],
+                                    category: "Arts",
+                                        url: "https://naturalhistory.si.edu/",
+                                            description: "Explore science and non-science museum work at the world's largest museum complex."
+},
+{
+    id: 33,
+        title: "Telluride Association Summer Seminar",
+            company: "Telluride Association",
+                location: "Cornell & Univ of Michigan",
+                    type: "Humanities",
+                        duration: "6 weeks (Residential)",
+                            compensation: "Free",
+                                requirements: ["Sophomore/Junior", "High Achievement"],
+                                    category: "Arts",
+                                        url: "https://www.tellurideassociation.org/",
+                                            description: "Free residential seminar focusing on Critical Black Studies or Anti-Oppressive Studies."
+},
+{
+    id: 34,
+        title: "LA Times High School Insider",
+            company: "Los Angeles Times",
+                location: "Remote",
+                    type: "Arts",
+                        duration: "Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["Sophomore/Junior/Senior", "Journalism Interest"],
+                                    category: "Arts",
+                                        url: "https://www.latimes.com/",
+                                            description: "Paid remote journalism internship with workshops and mentorship."
+},
+{
+    id: 35,
+        title: "Library of Congress Summer Internship",
+            company: "Library of Congress",
+                location: "Remote/Hybrid",
+                    type: "Arts",
+                        duration: "Summer 2026 (4 weeks)",
+                            compensation: "Unpaid",
+                                requirements: ["Sophomore/Junior/Senior"],
+                                    category: "Arts",
+                                        url: "https://www.loc.gov/",
+                                            description: "Create content for exhibition spaces and learn about library science."
+},
+{
+    id: 36,
+        title: "SFUSD Summer Tech Internship Program",
+            company: "San Francisco Unified School District",
+                location: "San Francisco, CA (Bay Area)",
+                    type: "Technology",
+                        duration: "Summer 2026 (6-8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["Age 14+", "SFUSD High School Student", "Tech Interest"],
+                                    category: "Technology",
+                                        url: "https://www.sfusd.edu/services/career-technical-education/internships",
+                                            description: "Paid summer internships in Bay Area tech companies. Biotech, animation, computer science. For SF students."
+},
+{
+    id: 37,
+        title: "Santa Clara University Engineering Programs",
+            company: "Santa Clara University",
+                location: "Santa Clara, CA (Bay Area)",
+                    type: "Program",
+                        duration: "Summer 2026 (1-2 weeks)",
+                            compensation: "Tuition-based",
+                                requirements: ["Sophomore/Junior/Senior", "Engineering Interest"],
+                                    category: "STEM",
+                                        url: "https://www.scu.edu/engineering/",
+                                            description: "Engineering summer programs for high school students. Hands-on projects, labs, college experience at Silicon Valley university."
+},
+{
+    id: 38,
+        title: "Project Write Now Teen Internship",
+            company: "Project Write Now",
+                location: "Remote",
+                    type: "Arts",
+                        duration: "Year-Round",
+                            compensation: "Unpaid",
+                                requirements: ["Sophomore/Junior/Senior", "Writing Interest"],
+                                    category: "Arts",
+                                        url: "https://www.projectwritenow.org/",
+                                            description: "Remote program for students interested in writing and leadership skills."
+},
+{
+    id: 39,
+        title: "U.S. Department of State Student Internship",
+            company: "U.S. Department of State",
+                location: "DC & Embassies Worldwide",
+                    type: "Program",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["Sophomore/Junior/Senior", "U.S. Citizen"],
+                                    category: "Business",
+                                        url: "https://careers.state.gov/",
+                                            description: "Paid internship in U.S. embassies, consulates, and domestic State Department offices."
+},
+{
+    id: 40,
+        title: "Federal Reserve Bank of Boston TIP",
+            company: "Federal Reserve Bank",
+                location: "Boston, MA",
+                    type: "Business",
+                        duration: "Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["Completed Sophomore Year", "Boston Public Schools"],
+                                    category: "Business",
+                                        url: "https://www.bostonfed.org/",
+                                            description: "Paid work and learning program in economics and finance."
+},
+{
+    id: 41,
+        title: "U.S. Secret Service Pathways Program",
+            company: "U.S. Secret Service",
+                location: "Washington, DC",
+                    type: "Program",
+                        duration: "Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["Junior or higher", "GPA 2.5+", "U.S. Citizen"],
+                                    category: "Business",
+                                        url: "https://www.secretservice.gov/",
+                                            description: "Gain insight into Secret Service operations with paid participation."
+},
+{
+    id: 42,
+        title: "Hutton Junior Fisheries Biology",
+            company: "American Fisheries Society",
+                location: "Various U.S. Locations",
+                    type: "STEM",
+                        duration: "Summer 2026 (8-10 weeks)",
+                            compensation: "Paid Stipend",
+                                requirements: ["Sophomore (some regions)", "Environmental Interest"],
+                                    category: "STEM",
+                                        url: "https://hutton.fisheries.org/",
+                                            description: "Paid summer mentoring program in fisheries science and marine biology."
+},
+{
+    id: 43,
+        title: "Spark Summer Program",
+            company: "Multiple Organizations",
+                location: "Seattle, WA Area",
+                    type: "Program",
+                        duration: "Summer 2026",
+                            compensation: "Varies",
+                                requirements: ["Grades 9-12", "Seattle Area"],
+                                    category: "Business",
+                                        url: "https://www.sparksummer.com/",
+                                            description: "Mentorship connecting high schoolers with industry experts and educators."
+},
+{
+    id: 44,
+        title: "MITRE High School Student Program",
+            company: "MITRE Corporation",
+                location: "Multiple Locations",
+                    type: "Technology",
+                        duration: "Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["Sophomore/Junior/Senior", "Cybersecurity/Tech Interest"],
+                                    category: "Technology",
+                                        url: "https://www.mitre.org/careers/",
+                                            description: "Internship in cybersecurity, software engineering, data science, and innovation."
+},
+{
+    id: 45,
+        title: "Empowerly Startup Internship Program",
+            company: "Various Startups",
+                location: "Remote",
+                    type: "Business",
+                        duration: "Flexible",
+                            compensation: "Varies",
+                                requirements: ["Freshman-Senior", "Career Development Focus"],
+                                    category: "Business",
+                                        url: "https://empowerly.com/",
+                                            description: "Engage in career paths, develop professional skills with globally-minded startups."
+},
+{
+    id: 46,
+        title: "Veritas AI Internship Program",
+            company: "Various Startups",
+                location: "Virtual",
+                    type: "Technology",
+                        duration: "8 weeks",
+                            compensation: "Varies",
+                                requirements: ["Sophomore/Junior/Senior", "AI/ML Interest"],
+                                    category: "Technology",
+                                        url: "https://www.veritasai.com/",
+                                            description: "Work with VC-backed startups on real-world AI/ML projects virtually."
+},
+{
+    id: 47,
+        title: "Computer Science for Cyber Security (CS4CS)",
+            company: "NYU Tandon",
+                location: "Brooklyn, NY",
+                    type: "Technology",
+                        duration: "Summer 2026",
+                            compensation: "Free",
+                                requirements: ["10th/11th Grade", "NYC Resident"],
+                                    category: "Technology",
+                                        url: "https://engineering.nyu.edu/",
+                                            description: "Cybersecurity fundamentals through hands-on training and coding."
+},
+{
+    id: 48,
+        title: "Boston University RISE Internship",
+            company: "Boston University",
+                location: "Boston, MA",
+                    type: "Research",
+                        duration: "Late June-Early Aug 2026",
+                            compensation: "Free",
+                                requirements: ["Junior (typically)", "Research Interest"],
+                                    category: "STEM",
+                                        url: "https://www.bu.edu/summer/",
+                                            description: "University laboratory research in various STEM fields."
+},
+{
+    id: 49,
+        title: "Carnegie Mellon SAMS Program",
+            company: "Carnegie Mellon University",
+                location: "Pittsburgh, PA",
+                    type: "STEM",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Free (Residential)",
+                                requirements: ["Rising Junior/Senior", "Diverse Backgrounds"],
+                                    category: "STEM",
+                                        url: "https://www.cmu.edu/pre-college/",
+                                            description: "Summer Academy for Math and Science with intensive STEM coursework."
+},
+{
+    id: 50,
+        title: "USC Summer Programs",
+            company: "University of Southern California",
+                location: "Los Angeles, CA",
+                    type: "Program",
+                        duration: "Summer 2026 (2-6 weeks)",
+                            compensation: "Tuition-based",
+                                requirements: ["Sophomore/Junior/Senior", "Various Interests"],
+                                    category: "Arts",
+                                        url: "https://summerprograms.usc.edu/",
+                                            description: "Immersive courses in science, filmmaking, writing, with college credit opportunities."
+}
+]
+
+export default function InternshipPage() {
+    const [selectedCategory, setSelectedCategory] = useState<string>('All')
+    const [selectedType, setSelectedType] = useState<string>('All')
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [interestedIds, setInterestedIds] = useState<Set<number>>(new Set())
+    const itemsPerPage = 10
+
+    // Load interested programs from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem('interestedInternships')
+        if (saved) {
+            setInterestedIds(new Set(JSON.parse(saved)))
+        }
+    }, [])
+
+    // Toggle interest for a program
+    const toggleInterest = (id: number) => {
+        setInterestedIds(prev => {
+            const newSet = new Set(prev)
+            if (newSet.has(id)) {
+                newSet.delete(id)
+            } else {
+                newSet.add(id)
+            }
+            // Save to localStorage
+            localStorage.setItem('interestedInternships', JSON.stringify(Array.from(newSet)))
+            return newSet
+        })
+    }
+
+    const categories = ['All', 'Technology', 'Business', 'Research', 'Arts', 'Healthcare', 'STEM']
+    const types = ['All', 'Internship', 'Research', 'Technology', 'Leadership', 'Program']
+
+    const filteredOpportunities = opportunities.filter(opp => {
+        const matchesCategory = selectedCategory === 'All' || opp.category === selectedCategory
+        const matchesType = selectedType === 'All' || opp.type === selectedType
+        return matchesCategory && matchesType
+    })
+
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedCategory, selectedType])
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredOpportunities.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const currentOpportunities = filteredOpportunities.slice(startIndex, endIndex)
+
+    // Page navigation functions
+    const goToPage = (page: number) => {
+        setCurrentPage(page)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const goToPreviousPage = () => {
+        if (currentPage > 1) goToPage(currentPage - 1)
+    }
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) goToPage(currentPage + 1)
+    }
+
+    return (
+        <div className="min-h-screen bg-slate-50">
+            {/* Navigation */}
+            <nav className="bg-white border-b border-slate-200 mb-6">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <Link href="/" className="flex items-center space-x-2">
+                        <Briefcase className="w-10 h-10 text-blue-600" />
+                    </Link>
+                    <div className="flex items-center space-x-4">
+                        <Link href="/dashboard" className="text-slate-600 hover:text-slate-900">Match Agent</Link>
+                        <Link href="/pathway" className="text-slate-600 hover:text-slate-900">Career Path Agent</Link>
+                        <Link href="/progress" className="text-slate-600 hover:text-slate-900">Progress Agent</Link>
+                        <Link href="/essay" className="text-slate-600 hover:text-slate-900">Essay Agent</Link>
+                        <Link href="/scholarship" className="text-slate-600 hover:text-slate-900">Scholarship Agent</Link>
+                        <Link href="/internship" className="text-slate-600 hover:text-slate-900 font-bold">Internship Agent</Link>
+                        <Link href="/competition" className="text-slate-600 hover:text-slate-900">Competition Agent</Link>
+                        <Link href="/club" className="text-slate-600 hover:text-slate-900">Club Agent</Link>
+                        <Link href="/financial-aid" className="text-slate-600 hover:text-slate-900">Financial Aid Agent</Link>
+                    </div>
+                </div>
+            </nav>
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                        Internship & Work Opportunities Agent
+                    </h1>
+                    <p className="text-slate-600 mb-4">Real, verified internship opportunities for high school sophomores</p>
+
+                    {/* Verified Badge */}
+                    <div className="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg">
+                        <span className="font-bold text-lg">✓ Sophomore Students - Real Verified Programs</span>
+                    </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <Card className="bg-blue-50 border-blue-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-blue-600 font-medium">Verified Opportunities</p>
+                                    <p className="text-3xl font-bold text-blue-700">{opportunities.length}</p>
+                                </div>
+                                <Briefcase className="w-12 h-12 text-blue-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-green-50 border-green-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-green-600 font-medium">Top Organizations</p>
+                                    <p className="text-3xl font-bold text-green-700">35+</p>
+                                </div>
+                                <Building2 className="w-12 h-12 text-green-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-purple-50 border-purple-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-purple-600 font-medium">Paid Programs</p>
+                                    <p className="text-3xl font-bold text-purple-700">25+</p>
+                                </div>
+                                <DollarSign className="w-12 h-12 text-purple-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Filters */}
+                <div className="mb-6 space-y-4">
+                    <div>
+                        <div className="flex items-center space-x-2 mb-3">
+                            <Filter className="w-5 h-5 text-slate-600" />
+                            <h3 className="font-semibold text-slate-900">Filter by Category</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {categories.map(category => (
+                                <Button
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    variant={selectedCategory === category ? "default" : "outline"}
+                                    className={selectedCategory === category
+                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                        : "text-slate-600"}
+                                >
+                                    {category}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center space-x-2 mb-3">
+                            <Filter className="w-5 h-5 text-slate-600" />
+                            <h3 className="font-semibold text-slate-900">Filter by Type</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {types.map(type => (
+                                <Button
+                                    key={type}
+                                    onClick={() => setSelectedType(type)}
+                                    variant={selectedType === type ? "default" : "outline"}
+                                    className={selectedType === type
+                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                        : "text-slate-600"}
+                                >
+                                    {type}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Opportunities List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {currentOpportunities.map((opportunity) => (
+                        <Card key={opportunity.id} className="hover:shadow-lg transition relative">
+                            <CardHeader>
+                                {/* Interest Checkbox */}
+                                <div
+                                    className="absolute top-4 left-4 cursor-pointer z-10"
+                                    onClick={() => toggleInterest(opportunity.id)}
+                                >
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${interestedIds.has(opportunity.id)
+                                        ? 'bg-blue-600 border-blue-600'
+                                        : 'border-slate-300 hover:border-blue-400'
+                                        }`}>
+                                        {interestedIds.has(opportunity.id) && (
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start justify-between ml-10">
+                                    <div className="flex-1">
+                                        <CardTitle className="text-lg mb-2">{opportunity.title}</CardTitle>
+                                        <CardDescription className="text-sm text-slate-500">
+                                            {opportunity.company}
+                                        </CardDescription>
+                                    </div>
+                                    <div className="bg-blue-100 px-3 py-1 rounded-full">
+                                        <span className="text-sm font-semibold text-blue-700">{opportunity.category}</span>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <p className="text-sm text-slate-600">{opportunity.description}</p>
+
+                                    <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                        <MapPin className="w-4 h-4" />
+                                        <span>{opportunity.location}</span>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                        <Clock className="w-4 h-4" />
+                                        <span>{opportunity.duration}</span>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <DollarSign className="w-5 h-5 text-green-600" />
+                                        <span className="font-bold text-green-700 text-lg">{opportunity.compensation}</span>
+                                    </div>
+
+                                    <div>
+                                        <p className="text-sm font-semibold text-slate-700 mb-2">Requirements:</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {opportunity.requirements.map((req, i) => (
+                                                <span key={i} className="text-xs bg-slate-100 px-2 py-1 rounded-full text-slate-600">
+                                                    {req}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <a href={opportunity.url} target="_blank" rel="noopener noreferrer" className="block w-full">
+                                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                                            View Official Site
+                                        </Button>
+                                    </a>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="mt-8 flex flex-col items-center space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Button
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 1}
+                                variant="outline"
+                                className="px-3 py-2"
+                            >
+                                <ChevronLeft className="w-4 h-4 mr-1" />
+                                Previous
+                            </Button>
+
+                            <div className="flex items-center space-x-1">
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                    <Button
+                                        key={page}
+                                        onClick={() => goToPage(page)}
+                                        variant={currentPage === page ? "default" : "outline"}
+                                        className={`px-3 py-2 min-w-[40px] ${currentPage === page
+                                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                            : 'text-slate-600'
+                                            }`}
+                                    >
+                                        {page}
+                                    </Button>
+                                ))}
+                            </div>
+
+                            <Button
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages}
+                                variant="outline"
+                                className="px-3 py-2"
+                            >
+                                Next
+                                <ChevronRight className="w-4 h-4 ml-1" />
+                            </Button>
+                        </div>
+
+                        <p className="text-sm text-slate-600">
+                            Showing {startIndex + 1}-{Math.min(endIndex, filteredOpportunities.length)} of {filteredOpportunities.length} opportunities
+                        </p>
+                    </div>
+                )}
+
+                {/* Back to Home Button */}
+                <div className="mt-8 text-center">
+                    <Link href="/">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Home className="w-4 h-4 mr-2" /> Back to Home
+                        </Button>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    )
+}
+

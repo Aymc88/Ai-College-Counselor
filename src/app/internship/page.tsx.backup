@@ -1,0 +1,2422 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Briefcase, MapPin, Clock, Building2, Filter, Home, DollarSign, ChevronLeft, ChevronRight, GraduationCap, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+
+type Opportunity = {
+    id: number
+    title: string
+    company: string
+    location: string
+    type: string
+    duration: string
+    compensation: string
+    requirements: string[]
+    category: string
+    url: string
+    description: string
+}
+
+const opportunities: Opportunity[] = [
+    {
+        id: 1,
+        title: "Google High School Internship",
+        company: "Google",
+        location: "Mountain View, CA",
+        type: "Technology",
+        duration: "Summer 2026 (8-10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "CS Interest", "Local to Bay Area"],
+        category: "Technology",
+        url: "https://buildyourfuture.withgoogle.com/programs/step",
+        description: "Student Training in Engineering Program (STEP) for Bay Area high school students interested in computer science."
+    },
+    {
+        id: 2,
+        title: "Exploratorium High School Explainer Program",
+        company: "Exploratorium",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 + School Year",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "SF Bay Area Resident"],
+        category: "STEM",
+        url: "https://www.exploratorium.edu/visit/calendar/explainer-program",
+        description: "Teach museum visitors about science through hands-on exhibits and demonstrations."
+    },
+    {
+        id: 3,
+        title: "Stanford Medicine Summer Research",
+        company: "Stanford University",
+        location: "Stanford, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Age 16+", "Strong Science Background"],
+        category: "Healthcare",
+        url: "https://med.stanford.edu/summerresearch.html",
+        description: "Conduct biomedical research with Stanford faculty in cutting-edge labs."
+    },
+    {
+        id: 4,
+        title: "Oracle Academy High School Internship",
+        company: "Oracle",
+        location: "Redwood City, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Computer Science Courses", "Bay Area"],
+        category: "Technology",
+        url: "https://academy.oracle.com/en/oa-web-overview.html",
+        description: "Work on real technology projects with Oracle engineers and learn about enterprise software."
+    },
+    {
+        id: 5,
+        title: "SF Zoo Teen Conservation Program",
+        company: "San Francisco Zoo",
+        location: "San Francisco, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Ages 14-18", "Interest in Animals"],
+        category: "STEM",
+        url: "https://www.sfzoo.org/learn/teen-programs/",
+        description: "Work with zookeepers, learn about animal care, and educate zoo visitors."
+    },
+    {
+        id: 6,
+        title: "UCSF High School Intern Program",
+        company: "UCSF",
+        location: "San Francisco, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "GPA 3.0+", "SF Resident Preferred"],
+        category: "Healthcare",
+        url: "https://graduate.ucsf.edu/high-school-intern-program",
+        description: "Conduct biomedical research in UCSF labs working alongside graduate students and faculty."
+    },
+    {
+        id: 7,
+        title: "De Young Museum Teen Programs",
+        company: "Fine Arts Museums of SF",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "Interest in Art"],
+        category: "Arts",
+        url: "https://deyoung.famsf.org/deyoung/programs/teens",
+        description: "Work as museum educators and develop art programs for younger students."
+    },
+    {
+        id: 8,
+        title: "Lawrence Berkeley Lab Student Program",
+        company: "Berkeley Lab",
+        location: "Berkeley, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Age 16+", "STEM Excellence"],
+        category: "STEM",
+        url: "https://workforce.lbl.gov/high-school-students/",
+        description: "Participate in cutting-edge scientific research at a national laboratory."
+    },
+    {
+        id: 9,
+        title: "California Academy of Sciences Teen Program",
+        company: "Cal Academy of Sciences",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "SF Bay Area"],
+        category: "STEM",
+        url: "https://www.calacademy.org/educators/teen-programs",
+        description: "Engage museum visitors with exhibits on natural history, aquarium, and planetarium."
+    },
+    {
+        id: 10,
+        title: "Intel Bay Area Internship",
+        company: "Intel",
+        location: "Santa Clara, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "STEM Courses", "Bay Area Resident"],
+        category: "Technology",
+        url: "https://www.intel.com/content/www/us/en/jobs/students-and-grads.html",
+        description: "Work on semiconductor technology and computer engineering projects."
+    },
+    {
+        id: 11,
+        title: "SF Youth Commission Internship",
+        company: "City of San Francisco",
+        location: "San Francisco, CA",
+        type: "Government",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "SF Resident", "Civic Interest"],
+        category: "Business",
+        url: "https://sfgov.org/youthcommission/internships",
+        description: "Work with city government on policy and youth advocacy projects."
+    },
+    {
+        id: 12,
+        title: "Presidio Trust Youth Program",
+        company: "Presidio Trust",
+        location: "San Francisco, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 14-18", "Environmental Interest"],
+        category: "STEM",
+        url: "https://www.presidio.gov/volunteer/youth-programs",
+        description: "Environmental conservation and park stewardship in the Presidio National Park."
+    },
+    {
+        id: 13,
+        title: "Gilead Sciences High School Intern",
+        company: "Gilead Sciences",
+        location: "Foster City, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Biology/Chemistry", "Bay Area"],
+        category: "Healthcare",
+        url: "https://www.gilead.com/careers/students-and-graduates",
+        description: "Pharmaceutical research and development internship in biopharmaceuticals."
+    },
+    {
+        id: 14,
+        title: "Asian Art Museum Teen Council",
+        company: "Asian Art Museum",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "School Year + Summer 2026",
+        compensation: "Paid",
+        requirements: ["High School Student", "Grades 9-12", "Interest in Asian Culture"],
+        category: "Arts",
+        url: "https://asianart.org/education/teens/teen-council",
+        description: "Create programs, lead tours, and engage with Asian art and culture."
+    },
+    {
+        id: 15,
+        title: "SF Public Library Youth Internship",
+        company: "SF Public Library",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "SF Resident"],
+        category: "Business",
+        url: "https://sfpl.org/locations/main-library/teen-center",
+        description: "Help organize youth programs, maintain collections, and assist library patrons."
+    },
+    {
+        id: 16,
+        title: "Genentech High School Internship",
+        company: "Genentech",
+        location: "South San Francisco, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Strong Science GPA", "Bay Area"],
+        category: "Healthcare",
+        url: "https://www.gene.com/careers/university-relations",
+        description: "Biotechnology research internship in drug discovery and development."
+    },
+    {
+        id: 17,
+        title: "Oakland Museum Youth Interpreter",
+        company: "Oakland Museum of California",
+        location: "Oakland, CA",
+        type: "Arts",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "Oakland/Bay Area"],
+        category: "Arts",
+        url: "https://museumca.org/learn-with-us/teens",
+        description: "Engage visitors with California's art, history, and natural sciences."
+    },
+    {
+        id: 18,
+        title: "SFUSD Student Ambassador Program",
+        company: "SF Unified School District",
+        location: "San Francisco, CA",
+        type: "Leadership",
+        duration: "School Year + Summer 2026",
+        compensation: "Stipend",
+        requirements: ["High School Student", "SFUSD Student", "Leadership Skills"],
+        category: "Business",
+        url: "https://www.sfusd.edu/",
+        description: "Represent students in district meetings and help shape educational policies."
+    },
+    {
+        id: 19,
+        title: "Bay Area Discovery Museum Teen Volunteer",
+        company: "Bay Area Discovery Museum",
+        location: "Sausalito, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Volunteer (Service Hours)",
+        requirements: ["High School Student", "Ages 14-18", "Enjoy Working with Kids"],
+        category: "STEM",
+        url: "https://www.bayareadiscoverymuseum.org/get-involved/volunteer",
+        description: "Help facilitate hands-on learning experiences for young children in science and art."
+    },
+    {
+        id: 20,
+        title: "Adobe Creative Internship",
+        company: "Adobe",
+        location: "San Jose, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Creative Skills", "Portfolio"],
+        category: "Technology",
+        url: "https://www.adobe.com/careers/university.html",
+        description: "Work on creative software projects and learn from industry professionals."
+    },
+    {
+        id: 21,
+        title: "NASA Ames Research Internship",
+        company: "NASA Ames Research Center",
+        location: "Mountain View, CA",
+        type: "Research",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Age 16+", "Strong STEM Background"],
+        category: "STEM",
+        url: "https://www.nasa.gov/stem/internships-scholarships",
+        description: "Participate in aerospace research and space exploration projects."
+    },
+    {
+        id: 22,
+        title: "KQED Youth Media Producer",
+        company: "KQED",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Media Interest", "SF Bay Area"],
+        category: "Arts",
+        url: "https://www.kqed.org/education/youth-media",
+        description: "Create multimedia content and learn broadcast journalism."
+    },
+    {
+        id: 23,
+        title: "Apple Student Developer",
+        company: "Apple",
+        location: "Cupertino, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Programming Skills", "iOS Development"],
+        category: "Technology",
+        url: "https://www.apple.com/jobs/us/students.html",
+        description: "Develop iOS applications and work with Apple's development team."
+    },
+    {
+        id: 24,
+        title: "Berkeley Lab Computing Sciences",
+        company: "Lawrence Berkeley National Lab",
+        location: "Berkeley, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Programming Skills", "Math Excellence"],
+        category: "Technology",
+        url: "https://crd.lbl.gov/divisions/scidata/c3/c3-summer-students/",
+        description: "Work on computational science and data analysis projects."
+    },
+    {
+        id: 25,
+        title: "Stanford University Hospital Volunteer",
+        company: "Stanford Health Care",
+        location: "Palo Alto, CA",
+        type: "Healthcare",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Volunteer",
+        requirements: ["Age 16+", "Health Sciences Interest", "Background Check"],
+        category: "Healthcare",
+        url: "https://stanfordhealthcare.org/about-us/volunteer.html",
+        description: "Assist medical staff and gain healthcare experience."
+    },
+    {
+        id: 26,
+        title: "San Jose Tech Museum Teen Docent",
+        company: "The Tech Interactive",
+        location: "San Jose, CA",
+        type: "Education",
+        duration: "School Year + Summer",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 15-18", "Public Speaking"],
+        category: "STEM",
+        url: "https://www.thetech.org/get-involved/volunteer",
+        description: "Engage visitors with technology and science exhibits."
+    },
+    {
+        id: 27,
+        title: "Cisco Networking Academy",
+        company: "Cisco Systems",
+        location: "San Jose, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Networking Interest", "Tech Aptitude"],
+        category: "Technology",
+        url: "https://www.cisco.com/c/en/us/about/careers/we-are-cisco/students-and-new-graduates.html",
+        description: "Learn network engineering and cybersecurity fundamentals."
+    },
+    {
+        id: 28,
+        title: "SLAC National Accelerator Laboratory",
+        company: "SLAC",
+        location: "Menlo Park, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Physics/Engineering Interest", "Age 16+"],
+        category: "STEM",
+        url: "https://www6.slac.stanford.edu/science/opportunities.aspx",
+        description: "Particle physics and accelerator research internship."
+    },
+    {
+        id: 29,
+        title: "UC Berkeley Chemistry Research",
+        company: "UC Berkeley",
+        location: "Berkeley, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Chemistry Excellence", "Strong GPA"],
+        category: "STEM",
+        url: "https://chemistry.berkeley.edu/outreach/high-school",
+        description: "Conduct chemistry research in university laboratories."
+    },
+    {
+        id: 30,
+        title: "Golden Gate National Parks Youth",
+        company: "Golden Gate National Parks",
+        location: "San Francisco, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["Ages 15-18", "Environmental Interest", "Physical Fitness"],
+        category: "STEM",
+        url: "https://www.parksconservancy.org/programs/youth",
+        description: "Environmental conservation and park maintenance work."
+    },
+    {
+        id: 31,
+        title: "Autodesk Student Design Program",
+        company: "Autodesk",
+        location: "San Francisco, CA",
+        type: "Technology",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "CAD Skills", "Engineering Interest"],
+        category: "Technology",
+        url: "https://www.autodesk.com/careers/students",
+        description: "3D design and engineering software development."
+    },
+    {
+        id: 32,
+        title: "Stanford AI Lab High School Program",
+        company: "Stanford University",
+        location: "Stanford, CA",
+        type: "Research",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Programming Skills", "AI Interest"],
+        category: "Technology",
+        url: "https://ai.stanford.edu/outreach/",
+        description: "Machine learning and artificial intelligence research."
+    },
+    {
+        id: 33,
+        title: "SF Giants Youth Baseball Operations",
+        company: "San Francisco Giants",
+        location: "San Francisco, CA",
+        type: "Business",
+        duration: "Summer 2026 (10 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Sports Interest", "Business Aptitude"],
+        category: "Business",
+        url: "https://www.mlb.com/giants/community/youth-programs",
+        description: "Learn sports management and baseball operations."
+    },
+    {
+        id: 34,
+        title: "Kaiser Permanente Youth Volunteer",
+        company: "Kaiser Permanente",
+        location: "Oakland, CA",
+        type: "Healthcare",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Volunteer",
+        requirements: ["Age 16+", "Healthcare Interest", "Customer Service"],
+        category: "Healthcare",
+        url: "https://healthy.kaiserpermanente.org/northern-california/volunteer",
+        description: "Support healthcare staff and assist patients."
+    },
+    {
+        id: 35,
+        title: "Chabot Space Science Center",
+        company: "Chabot Space & Science Center",
+        location: "Oakland, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Astronomy Interest", "Public Speaking"],
+        category: "STEM",
+        url: "https://chabotspace.org/get-involved/volunteer/",
+        description: "Teach astronomy and operate planetarium shows."
+    },
+    {
+        id: 36,
+        title: "SF Symphony Youth Orchestra",
+        company: "San Francisco Symphony",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "School Year Program",
+        compensation: "Scholarship Available",
+        requirements: ["High School Student", "Classical Music Training", "Audition Required"],
+        category: "Arts",
+        url: "https://www.sfsymphony.org/Education-Community/Programs-for-Students/Youth-Orchestra",
+        description: "Professional orchestra training and performances."
+    },
+    {
+        id: 37,
+        title: "Monterey Bay Aquarium Teen Program",
+        company: "Monterey Bay Aquarium",
+        location: "Monterey, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Marine Biology Interest", "Ages 15-18"],
+        category: "STEM",
+        url: "https://www.montereybayaquarium.org/education/teen-programs",
+        description: "Marine conservation education and animal care."
+    },
+    {
+        id: 38,
+        title: "San Mateo County Parks Ranger",
+        company: "San Mateo County",
+        location: "San Mateo, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Outdoors Interest", "First Aid Certified"],
+        category: "STEM",
+        url: "https://parks.smcgov.org/volunteer",
+        description: "Park maintenance and visitor education."
+    },
+    {
+        id: 39,
+        title: "SF Ballet School Trainee",
+        company: "San Francisco Ballet",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "Year-Round Program",
+        compensation: "Scholarship Available",
+        requirements: ["High School Student", "Ballet Training", "Audition Required"],
+        category: "Arts",
+        url: "https://www.sfballet.org/school/",
+        description: "Professional ballet training and performances."
+    },
+    {
+        id: 40,
+        title: "Children's Discovery Museum",
+        company: "Children's Discovery Museum",
+        location: "San Jose, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Education Interest", "Ages 15-18"],
+        category: "STEM",
+        url: "https://www.cdm.org/volunteer/",
+        description: "Interactive learning exhibits and child education."
+    },
+    {
+        id: 41,
+        title: "Marin Headlands Institute",
+        company: "NatureBridge",
+        location: "Marin County, CA",
+        type: "Education",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend + Housing",
+        requirements: ["High School Student", "Environmental Science", "Leadership"],
+        category: "STEM",
+        url: "https://naturebridge.org/get-involved/work-with-us",
+        description: "Environmental education and outdoor teaching."
+    },
+    {
+        id: 42,
+        title: "Point Reyes National Seashore",
+        company: "National Park Service",
+        location: "Point Reyes, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Environmental Interest", "Physical Fitness"],
+        category: "STEM",
+        url: "https://www.nps.gov/pore/getinvolved/volunteer.htm",
+        description: "Coastal conservation and wildlife protection."
+    },
+    {
+        id: 43,
+        title: "SF SPCA Animal Care Volunteer",
+        company: "SF SPCA",
+        location: "San Francisco, CA",
+        type: "Healthcare",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Volunteer",
+        requirements: ["High School Student", "Animal Care Interest", "Commitment"],
+        category: "STEM",
+        url: "https://www.sfspca.org/volunteer/",
+        description: "Animal welfare and veterinary assistance."
+    },
+    {
+        id: 44,
+        title: "Bay Area Ridge Trail Council",
+        company: "Ridge Trail Council",
+        location: "Bay Area, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Volunteer",
+        requirements: ["High School Student", "Hiking Interest", "Trail Work"],
+        category: "STEM",
+        url: "https://ridgetrail.org/volunteer/",
+        description: "Trail maintenance and outdoor recreation."
+    },
+    {
+        id: 45,
+        title: "SF Contemporary Jewish Museum",
+        company: "Contemporary Jewish Museum",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Cultural Interest", "Museum Education"],
+        category: "Arts",
+        url: "https://www.thecjm.org/get_involved",
+        description: "Museum education and cultural programming."
+    },
+    {
+        id: 46,
+        title: "Marine Mammal Center Volunteer",
+        company: "Marine Mammal Center",
+        location: "Sausalito, CA",
+        type: "Healthcare",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Volunteer",
+        requirements: ["Age 15+", "Marine Biology Interest", "Weekend Availability"],
+        category: "STEM",
+        url: "https://www.marinemammalcenter.org/get-involved/volunteer",
+        description: "Marine animal rescue and rehabilitation."
+    },
+    {
+        id: 47,
+        title: "SF Botanical Garden Youth",
+        company: "SF Botanical Garden",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Botany Interest", "Outdoor Work"],
+        category: "STEM",
+        url: "https://www.sfbg.org/volunteer",
+        description: "Plant conservation and horticultural education."
+    },
+    {
+        id: 48,
+        title: "Randall Museum Teen Program",
+        company: "Randall Museum",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Science/Arts Interest", "Ages 14-18"],
+        category: "STEM",
+        url: "https://www.randallmuseum.org/programs/teen-programs",
+        description: "Science and arts education for youth."
+    },
+    {
+        id: 49,
+        title: "Save The Bay Restoration",
+        company: "Save The Bay",
+        location: "Oakland, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Environmental Science", "Team Work"],
+        category: "STEM",
+        url: "https://savesanfranciscobay.org/volunteer",
+        description: "Wetland restoration and environmental advocacy."
+    },
+    {
+        id: 50,
+        title: "SF War Memorial Performing Arts",
+        company: "War Memorial",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "Performing Arts", "Stage Interest"],
+        category: "Arts",
+        url: "https://sfwmpac.org/volunteer/",
+        description: "Theater operations and performing arts management."
+    },
+    {
+        id: 51,
+        title: "Coyote Point Museum Education",
+        company: "CuriOdyssey",
+        location: "San Mateo, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Science Education", "Ages 15-18"],
+        category: "STEM",
+        url: "https://www.curiodyssey.org/visit/volunteer/",
+        description: "Wildlife education and environmental science."
+    },
+    {
+        id: 52,
+        title: "Mission Science Workshop",
+        company: "Community Initiative",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "STEM Teaching", "Bilingual Preferred"],
+        category: "STEM",
+        url: "https://www.scienceworkshop.org/",
+        description: "Community science education for underserved youth."
+    },
+    {
+        id: 53,
+        title: "East Bay Regional Parks",
+        company: "East Bay Parks",
+        location: "Oakland, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Outdoors Work", "Physical Fitness"],
+        category: "STEM",
+        url: "https://www.ebparks.org/volunteer",
+        description: "Park ranger and environmental education."
+    },
+    {
+        id: 54,
+        title: "Cartoon Art Museum Teen Council",
+        company: "Cartoon Art Museum",
+        location: "San Francisco, CA",
+        type: "Arts",
+        duration: "School Year Program",
+        compensation: "Volunteer",
+        requirements: ["High School Student", "Art Interest", "Comics/Animation"],
+        category: "Arts",
+        url: "https://www.cartoonart.org/get-involved/",
+        description: "Comic art curation and museum programs."
+    },
+    {
+        id: 55,
+        title: "Habitot Children's Museum",
+        company: "Habitot",
+        location: "Berkeley, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Early Childhood Ed", "Ages 15-18"],
+        category: "STEM",
+        url: "https://www.habitot.org/volunteer",
+        description: "Early childhood education and museum facilitation."
+    },
+    {
+        id: 56,
+        title: "Peninsula Humane Society Youth",
+        company: "Peninsula Humane Society",
+        location: "Burlingame, CA",
+        type: "Healthcare",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Volunteer",
+        requirements: ["High School Student", "Animal Care", "Weekend Availability"],
+        category: "STEM",
+        url: "https://phs-spca.org/volunteer/",
+        description: "Animal shelter operations and veterinary care."
+    },
+    {
+        id: 57,
+        title: "Maker Faire Bay Area Youth",
+        company: "Make Community",
+        location: "San Mateo, CA",
+        type: "Education",
+        duration: "Event-Based (May 2026)",
+        compensation: "Volunteer",
+        requirements: ["High School Student", "Maker/Tech Interest", "Hands-on Skills"],
+        category: "STEM",
+        url: "https://makerfaire.com/volunteer/",
+        description: "Technology exhibitions and maker education."
+    },
+    {
+        id: 58,
+        title: "Lawrence Hall of Science Berkeley",
+        company: "UC Berkeley",
+        location: "Berkeley, CA",
+        type: "Education",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Science Education", "Public Speaking"],
+        category: "STEM",
+        url: "https://www.lawrencehallofscience.org/get-involved/volunteer/",
+        description: "Hands-on science education and exhibit demonstrations."
+    },
+    {
+        id: 59,
+        title: "Filoli Historic House & Garden",
+        company: "Filoli",
+        location: "Woodside, CA",
+        type: "Arts",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Stipend",
+        requirements: ["High School Student", "History/Horticulture", "Customer Service"],
+        category: "Arts",
+        url: "https://filoli.org/support/volunteer/",
+        description: "Historic preservation and garden education."
+    },
+    {
+        id: 60,
+        title: "SF Environment Youth Program",
+        company: "SF Environment Dept",
+        location: "San Francisco, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Sustainability", "SF Resident"],
+        category: "STEM",
+        url: "https://sfenvironment.org/get-involved",
+        description: "Urban sustainability and climate action projects."
+    },
+    {
+        id: 61,
+        title: "Computer History Museum Teen",
+        company: "Computer History Museum",
+        location: "Mountain View, CA",
+        type: "Education",
+        duration: "Summer 2026 (6 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Tech History Interest", "Ages 15-18"],
+        category: "Technology",
+        url: "https://computerhistory.org/get-involved/volunteer/",
+        description: "Technology history education and exhibit tours."
+    },
+    {
+        id: 62,
+        title: "SF Public Utilities Youth Corps",
+        company: "SFPUC",
+        location: "San Francisco, CA",
+        type: "Conservation",
+        duration: "Summer 2026 (8 weeks)",
+        compensation: "Paid",
+        requirements: ["High School Student", "Environmental Engineering", "SF Resident"],
+        category: "STEM",
+        url: "https://sfpuc.org/about-us/careers/youth-programs",
+        description: "Water conservation and sustainable infrastructure."
+    },
+    {
+        id: 63,
+        title: "Exploratorium After Dark Youth",
+        company: "Exploratorium",
+        location: "San Francisco, CA",
+        type: "Education",
+        duration: "School Year Program",
+        compensation: "Paid",
+        requirements: ["High School Student", "Ages 16-18", "Evening Availability"],
+        category: "STEM",
+        url: "https://www.exploratorium.edu/visit/calendar/explainer-program",
+        description: "Adult-only evening science programs and demonstrations."
+    }
+]
+
+export default function InternshipPage() {
+    id: 1,
+        title: "Google High School Internship",
+            company: "Google",
+                location: "Mountain View, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (8-10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "CS Interest", "Local to Bay Area"],
+                                    category: "Technology",
+                                        url: "https://buildyourfuture.withgoogle.com/programs/step",
+                                            description: "Student Training in Engineering Program (STEP) for Bay Area high school students interested in computer science."
+},
+{
+    id: 2,
+        title: "Exploratorium High School Explainer Program",
+            company: "Exploratorium",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 + School Year",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "SF Bay Area Resident"],
+                                    category: "STEM",
+                                        url: "https://www.exploratorium.edu/visit/calendar/explainer-program",
+                                            description: "Teach museum visitors about science through hands-on exhibits and demonstrations."
+},
+{
+    id: 3,
+        title: "Stanford Medicine Summer Research",
+            company: "Stanford University",
+                location: "Stanford, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Age 16+", "Strong Science Background"],
+                                    category: "Healthcare",
+                                        url: "https://med.stanford.edu/summerresearch.html",
+                                            description: "Conduct biomedical research with Stanford faculty in cutting-edge labs."
+},
+{
+    id: 4,
+        title: "Oracle Academy High School Internship",
+            company: "Oracle",
+                location: "Redwood City, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Computer Science Courses", "Bay Area"],
+                                    category: "Technology",
+                                        url: "https://academy.oracle.com/en/oa-web-overview.html",
+                                            description: "Work on real technology projects with Oracle engineers and learn about enterprise software."
+},
+{
+    id: 5,
+        title: "SF Zoo Teen Conservation Program",
+            company: "San Francisco Zoo",
+                location: "San Francisco, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Ages 14-18", "Interest in Animals"],
+                                    category: "STEM",
+                                        url: "https://www.sfzoo.org/learn/teen-programs/",
+                                            description: "Work with zookeepers, learn about animal care, and educate zoo visitors."
+},
+{
+    id: 6,
+        title: "UCSF High School Intern Program",
+            company: "UCSF",
+                location: "San Francisco, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "GPA 3.0+", "SF Resident Preferred"],
+                                    category: "Healthcare",
+                                        url: "https://graduate.ucsf.edu/high-school-intern-program",
+                                            description: "Conduct biomedical research in UCSF labs working alongside graduate students and faculty."
+},
+{
+    id: 7,
+        title: "De Young Museum Teen Programs",
+            company: "Fine Arts Museums of SF",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "Interest in Art"],
+                                    category: "Arts",
+                                        url: "https://deyoung.famsf.org/deyoung/programs/teens",
+                                            description: "Work as museum educators and develop art programs for younger students."
+},
+{
+    id: 8,
+        title: "Lawrence Berkeley Lab Student Program",
+            company: "Berkeley Lab",
+                location: "Berkeley, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Age 16+", "STEM Excellence"],
+                                    category: "STEM",
+                                        url: "https://workforce.lbl.gov/high-school-students/",
+                                            description: "Participate in cutting-edge scientific research at a national laboratory."
+},
+{
+    id: 9,
+        title: "LinkedIn REACH Apprenticeship",
+            company: "LinkedIn",
+                location: "Sunnyvale, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Housing Stipend",
+                                requirements: ["High School Senior", "Underrepresented in Tech", "Bay Area"],
+                                    category: "Technology",
+                                        url: "https://careers.linkedin.com/reach",
+                                            description: "Technology apprenticeship for underrepresented high school seniors in the Bay Area."
+},
+{
+    id: 10,
+        title: "California Academy of Sciences Teen Program",
+            company: "Cal Academy of Sciences",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "SF Bay Area"],
+                                    category: "STEM",
+                                        url: "https://www.calacademy.org/educators/teen-programs",
+                                            description: "Engage museum visitors with exhibits on natural history, aquarium, and planetarium."
+},
+{
+    id: 11,
+        title: "Intel Bay Area Internship",
+            company: "Intel",
+                location: "Santa Clara, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "STEM Courses", "Bay Area Resident"],
+                                    category: "Technology",
+                                        url: "https://www.intel.com/content/www/us/en/jobs/students-and-grads.html",
+                                            description: "Work on semiconductor technology and computer engineering projects."
+},
+{
+    id: 12,
+        title: "SF Youth Commission Internship",
+            company: "City of San Francisco",
+                location: "San Francisco, CA",
+                    type: "Government",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "SF Resident", "Civic Interest"],
+                                    category: "Business",
+                                        url: "https://sfgov.org/youthcommission/internships",
+                                            description: "Work with city government on policy and youth advocacy projects."
+},
+{
+    id: 13,
+        title: "Tesla START Program",
+            company: "Tesla",
+                location: "Fremont/Palo Alto, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Technical Interest", "Bay Area"],
+                                    category: "Technology",
+                                        url: "https://www.tesla.com/careers/students",
+                                            description: "Hands-on experience in automotive manufacturing, engineering, and technology."
+},
+{
+    id: 14,
+        title: "Presidio Trust Youth Program",
+            company: "Presidio Trust",
+                location: "San Francisco, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 14-18", "Environmental Interest"],
+                                    category: "STEM",
+                                        url: "https://www.presidio.gov/volunteer/youth-programs",
+                                            description: "Environmental conservation and park stewardship in the Presidio National Park."
+},
+{
+    id: 15,
+        title: "Gilead Sciences High School Intern",
+            company: "Gilead Sciences",
+                location: "Foster City, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Biology/Chemistry", "Bay Area"],
+                                    category: "Healthcare",
+                                        url: "https://www.gilead.com/careers/students-and-graduates",
+                                            description: "Pharmaceutical research and development internship in biopharmaceuticals."
+},
+{
+    id: 16,
+        title: "Asian Art Museum Teen Council",
+            company: "Asian Art Museum",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "School Year + Summer 2026",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Grades 9-12", "Interest in Asian Culture"],
+                                    category: "Arts",
+                                        url: "https://asianart.org/education/teens/teen-council",
+                                            description: "Create programs, lead tours, and engage with Asian art and culture."
+},
+{
+    id: 17,
+        title: "SF Public Library Youth Internship",
+            company: "SF Public Library",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "SF Resident"],
+                                    category: "Business",
+                                        url: "https://sfpl.org/locations/main-library/teen-center",
+                                            description: "Help organize youth programs, maintain collections, and assist library patrons."
+},
+{
+    id: 18,
+        title: "Genentech High School Internship",
+            company: "Genentech",
+                location: "South San Francisco, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Strong Science GPA", "Bay Area"],
+                                    category: "Healthcare",
+                                        url: "https://www.gene.com/careers/university-relations",
+                                            description: "Biotechnology research internship in drug discovery and development."
+},
+{
+    id: 19,
+        title: "Oakland Museum Youth Interpreter",
+            company: "Oakland Museum of California",
+                location: "Oakland, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "Oakland/Bay Area"],
+                                    category: "Arts",
+                                        url: "https://museumca.org/learn-with-us/teens",
+                                            description: "Engage visitors with California's art, history, and natural sciences."
+},
+{
+    id: 20,
+        title: "SFUSD Student Ambassador Program",
+            company: "SF Unified School District",
+                location: "San Francisco, CA",
+                    type: "Leadership",
+                        duration: "School Year + Summer 2026",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "SFUSD Student", "Leadership Skills"],
+                                    category: "Business",
+                                        url: "https://www.sfusd.edu/",
+                                            description: "Represent students in district meetings and help shape educational policies."
+},
+{
+    id: 21,
+        title: "Bay Area Discovery Museum Teen Volunteer",
+            company: "Bay Area Discovery Museum",
+                location: "Sausalito, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Volunteer (Service Hours)",
+                                requirements: ["High School Student", "Ages 14-18", "Enjoy Working with Kids"],
+                                    category: "STEM",
+                                        url: "https://www.bayareadiscoverymuseum.org/get-involved/volunteer",
+                                            description: "Help facilitate hands-on learning experiences for young children in science and art."
+},
+{
+    id: 22,
+        title: "Adobe Creative Internship",
+            company: "Adobe",
+                location: "San Jose, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Creative Skills", "Portfolio"],
+                                    category: "Technology",
+                                        url: "https://www.adobe.com/careers/university.html",
+                                            description: "Work on creative software projects and learn from industry professionals."
+},
+{
+    id: 23,
+        title: "NASA Ames Research Internship",
+            company: "NASA Ames Research Center",
+                location: "Mountain View, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Age 16+", "Strong STEM Background"],
+                                    category: "STEM",
+                                        url: "https://www.nasa.gov/stem/internships-scholarships",
+                                            description: "Participate in aerospace research and space exploration projects."
+},
+{
+    id: 24,
+        title: "Salesforce Futureforce Program",
+            company: "Salesforce",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Housing",
+                                requirements: ["High School Senior", "Computer Science Interest", "Strong Academics"],
+                                    category: "Technology",
+                                        url: "https://www.salesforce.com/company/careers/university-recruiting/",
+                                            description: "Cloud computing and CRM technology internship with mentorship."
+},
+{
+    id: 25,
+        title: "KQED Youth Media Producer",
+            company: "KQED",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Media Interest", "SF Bay Area"],
+                                    category: "Arts",
+                                        url: "https://www.kqed.org/education/youth-media",
+                                            description: "Create multimedia content and learn broadcast journalism."
+},
+{
+    id: 26,
+        title: "Apple Student Developer",
+            company: "Apple",
+                location: "Cupertino, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Programming Skills", "iOS Development"],
+                                    category: "Technology",
+                                        url: "https://www.apple.com/jobs/us/students.html",
+                                            description: "Develop iOS applications and work with Apple's development team."
+},
+{
+    id: 27,
+        title: "Berkeley Lab Computing Sciences",
+            company: "Lawrence Berkeley National Lab",
+                location: "Berkeley, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Programming Skills", "Math Excellence"],
+                                    category: "Technology",
+                                        url: "https://crd.lbl.gov/divisions/scidata/c3/c3-summer-students/",
+                                            description: "Work on computational science and data analysis projects."
+},
+{
+    id: 28,
+        title: "Pixar Animation Internship",
+            company: "Pixar Animation Studios",
+                location: "Emeryville, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Animation Skills", "Portfolio Required"],
+                                    category: "Arts",
+                                        url: "https://www.pixar.com/internships",
+                                            description: "Learn 3D animation and storytelling from Pixar professionals."
+},
+{
+    id: 29,
+        title: "Stanford University Hospital Volunteer",
+            company: "Stanford Health Care",
+                location: "Palo Alto, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["Age 16+", "Health Sciences Interest", "Background Check"],
+                                    category: "Healthcare",
+                                        url: "https://stanfordhealthcare.org/about-us/volunteer.html",
+                                            description: "Assist medical staff and gain healthcare experience."
+},
+{
+    id: 30,
+        title: "VMware Technology Internship",
+            company: "VMware",
+                location: "Palo Alto, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Computer Science", "GPA 3.5+"],
+                                    category: "Technology",
+                                        url: "https://careers.vmware.com/early-career",
+                                            description: "Cloud infrastructure and virtualization technology projects."
+},
+{
+    id: 31,
+        title: "San Jose Tech Museum Teen Docent",
+            company: "The Tech Interactive",
+                location: "San Jose, CA",
+                    type: "Education",
+                        duration: "School Year + Summer",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 15-18", "Public Speaking"],
+                                    category: "STEM",
+                                        url: "https://www.thetech.org/get-involved/volunteer",
+                                            description: "Engage visitors with technology and science exhibits."
+},
+{
+    id: 32,
+        title: "Cisco Networking Academy",
+            company: "Cisco Systems",
+                location: "San Jose, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Networking Interest", "Tech Aptitude"],
+                                    category: "Technology",
+                                        url: "https://www.cisco.com/c/en/us/about/careers/we-are-cisco/students-and-new-graduates.html",
+                                            description: "Learn network engineering and cybersecurity fundamentals."
+},
+{
+    id: 33,
+        title: "SLAC National Accelerator Laboratory",
+            company: "SLAC",
+                location: "Menlo Park, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Physics/Engineering Interest", "Age 16+"],
+                                    category: "STEM",
+                                        url: "https://www6.slac.stanford.edu/science/opportunities.aspx",
+                                            description: "Particle physics and accelerator research internship."
+},
+{
+    id: 34,
+        title: "Airbnb Design Internship",
+            company: "Airbnb",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Housing",
+                                requirements: ["High School Senior", "Design Portfolio", "UX/UI Interest"],
+                                    category: "Technology",
+                                        url: "https://careers.airbnb.com/university/",
+                                            description: "User experience design and product development."
+},
+{
+    id: 35,
+        title: "UC Berkeley Chemistry Research",
+            company: "UC Berkeley",
+                location: "Berkeley, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Chemistry Excellence", "Strong GPA"],
+                                    category: "STEM",
+                                        url: "https://chemistry.berkeley.edu/outreach/high-school",
+                                            description: "Conduct chemistry research in university laboratories."
+},
+{
+    id: 36,
+        title: "Golden Gate National Parks Youth",
+            company: "Golden Gate National Parks",
+                location: "San Francisco, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["Ages 15-18", "Environmental Interest", "Physical Fitness"],
+                                    category: "STEM",
+                                        url: "https://www.parksconservancy.org/programs/youth",
+                                            description: "Environmental conservation and park maintenance work."
+},
+{
+    id: 37,
+        title: "Autodesk Student Design Program",
+            company: "Autodesk",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "CAD Skills", "Engineering Interest"],
+                                    category: "Technology",
+                                        url: "https://www.autodesk.com/careers/students",
+                                            description: "3D design and engineering software development."
+},
+{
+    id: 38,
+        title: "Stanford AI Lab High School Program",
+            company: "Stanford University",
+                location: "Stanford, CA",
+                    type: "Research",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Programming Skills", "AI Interest"],
+                                    category: "Technology",
+                                        url: "https://ai.stanford.edu/outreach/",
+                                            description: "Machine learning and artificial intelligence research."
+},
+{
+    id: 39,
+        title: "SF Giants Youth Baseball Operations",
+            company: "San Francisco Giants",
+                location: "San Francisco, CA",
+                    type: "Business",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Sports Interest", "Business Aptitude"],
+                                    category: "Business",
+                                        url: "https://www.mlb.com/giants/community/youth-programs",
+                                            description: "Learn sports management and baseball operations."
+},
+{
+    id: 40,
+        title: "Dolby Laboratories Audio Engineering",
+            company: "Dolby Laboratories",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Audio Interest", "Physics/Math"],
+                                    category: "Technology",
+                                        url: "https://www.dolby.com/careers/students/",
+                                            description: "Audio technology and sound engineering projects."
+},
+{
+    id: 41,
+        title: "Kaiser Permanente Youth Volunteer",
+            company: "Kaiser Permanente",
+                location: "Oakland, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["Age 16+", "Healthcare Interest", "Customer Service"],
+                                    category: "Healthcare",
+                                        url: "https://healthy.kaiserpermanente.org/northern-california/volunteer",
+                                            description: "Support healthcare staff and assist patients."
+},
+{
+    id: 42,
+        title: "Yelp Product Internship",
+            company: "Yelp",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Product Interest", "Tech Savvy"],
+                                    category: "Technology",
+                                        url: "https://www.yelp.careers/students",
+                                            description: "Product management and user experience research."
+},
+{
+    id: 43,
+        title: "Chabot Space Science Center",
+            company: "Chabot Space & Science Center",
+                location: "Oakland, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Astronomy Interest", "Public Speaking"],
+                                    category: "STEM",
+                                        url: "https://chabotspace.org/get-involved/volunteer/",
+                                            description: "Teach astronomy and operate planetarium shows."
+},
+{
+    id: 44,
+        title: "Stripe Engineering Internship",
+            company: "Stripe",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Housing",
+                                requirements: ["High School Senior", "Programming Skills", "Fintech Interest"],
+                                    category: "Technology",
+                                        url: "https://stripe.com/jobs/university",
+                                            description: "Financial technology and payment processing development."
+},
+{
+    id: 45,
+        title: "SF Symphony Youth Orchestra",
+            company: "San Francisco Symphony",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "School Year Program",
+                            compensation: "Scholarship Available",
+                                requirements: ["High School Student", "Classical Music Training", "Audition Required"],
+                                    category: "Arts",
+                                        url: "https://www.sfsymphony.org/Education-Community/Programs-for-Students/Youth-Orchestra",
+                                            description: "Professional orchestra training and performances."
+},
+{
+    id: 46,
+        title: "Uber Technology Internship",
+            company: "Uber",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Computer Science", "Algorithm Skills"],
+                                    category: "Technology",
+                                        url: "https://www.uber.com/us/en/careers/teams/university/",
+                                            description: "Ridesharing technology and logistics optimization."
+},
+{
+    id: 47,
+        title: "Monterey Bay Aquarium Teen Program",
+            company: "Monterey Bay Aquarium",
+                location: "Monterey, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Marine Biology Interest", "Ages 15-18"],
+                                    category: "STEM",
+                                        url: "https://www.montereybayaquarium.org/education/teen-programs",
+                                            description: "Marine conservation education and animal care."
+},
+{
+    id: 48,
+        title: "Lyft Product Design Internship",
+            company: "Lyft",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Design Portfolio", "Mobile App Interest"],
+                                    category: "Technology",
+                                        url: "https://www.lyft.com/careers/early-talent",
+                                            description: "Mobile app design and user experience."
+},
+{
+    id: 49,
+        title: "San Mateo County Parks Ranger",
+            company: "San Mateo County",
+                location: "San Mateo, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Outdoors Interest", "First Aid Certified"],
+                                    category: "STEM",
+                                        url: "https://parks.smcgov.org/volunteer",
+                                            description: "Park maintenance and visitor education."
+},
+{
+    id: 50,
+        title: "Twilio Developer Internship",
+            company: "Twilio",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "API Knowledge", "Programming Skills"],
+                                    category: "Technology",
+                                        url: "https://www.twilio.com/company/jobs/university",
+                                            description: "Communications API and cloud platform development."
+},
+{
+    id: 51,
+        title: "SF Ballet School Trainee",
+            company: "San Francisco Ballet",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "Year-Round Program",
+                            compensation: "Scholarship Available",
+                                requirements: ["High School Student", "Ballet Training", "Audition Required"],
+                                    category: "Arts",
+                                        url: "https://www.sfballet.org/school/",
+                                            description: "Professional ballet training and performances."
+},
+{
+    id: 52,
+        title: "Pandora Music Technology",
+            company: "Pandora",
+                location: "Oakland, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Music + Tech Interest", "Programming"],
+                                    category: "Technology",
+                                        url: "https://www.pandora.com/careers/students",
+                                            description: "Music streaming technology and algorithms."
+},
+{
+    id: 53,
+        title: "Children's Discovery Museum",
+            company: "Children's Discovery Museum",
+                location: "San Jose, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Education Interest", "Ages 15-18"],
+                                    category: "STEM",
+                                        url: "https://www.cdm.org/volunteer/",
+                                            description: "Interactive learning exhibits and child education."
+},
+{
+    id: 54,
+        title: "Square Financial Technology",
+            company: "Square (Block)",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Benefits",
+                                requirements: ["High School Senior", "Fintech Interest", "Coding Skills"],
+                                    category: "Technology",
+                                        url: "https://squareup.com/careers/students",
+                                            description: "Payment processing and small business technology."
+},
+{
+    id: 55,
+        title: "Marin Headlands Institute",
+            company: "NatureBridge",
+                location: "Marin County, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend + Housing",
+                                requirements: ["High School Student", "Environmental Science", "Leadership"],
+                                    category: "STEM",
+                                        url: "https://naturebridge.org/get-involved/work-with-us",
+                                            description: "Environmental education and outdoor teaching."
+},
+{
+    id: 56,
+        title: "GitHub Developer Internship",
+            company: "GitHub",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Open Source Contributions", "Git Knowledge"],
+                                    category: "Technology",
+                                        url: "https://github.com/about/careers",
+                                            description: "Software development and version control systems."
+},
+{
+    id: 57,
+        title: "Canva Design Internship",
+            company: "Canva",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Graphic Design", "Portfolio"],
+                                    category: "Arts",
+                                        url: "https://www.canva.com/careers/students/",
+                                            description: "Graphic design tools and visual communication."
+},
+{
+    id: 58,
+        title: "Point Reyes National Seashore",
+            company: "National Park Service",
+                location: "Point Reyes, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Environmental Interest", "Physical Fitness"],
+                                    category: "STEM",
+                                        url: "https://www.nps.gov/pore/getinvolved/volunteer.htm",
+                                            description: "Coastal conservation and wildlife protection."
+},
+{
+    id: 59,
+        title: "Dropbox Engineering Internship",
+            company: "Dropbox",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Cloud Computing", "Programming Skills"],
+                                    category: "Technology",
+                                        url: "https://www.dropbox.com/jobs/students",
+                                            description: "Cloud storage and collaboration tools development."
+},
+{
+    id: 60,
+        title: "SF SPCA Animal Care Volunteer",
+            company: "SF SPCA",
+                location: "San Francisco, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["High School Student", "Animal Care Interest", "Commitment"],
+                                    category: "STEM",
+                                        url: "https://www.sfspca.org/volunteer/",
+                                            description: "Animal welfare and veterinary assistance."
+},
+{
+    id: 61,
+        title: "Atlassian Software Internship",
+            company: "Atlassian",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Agile Knowledge", "Team Collaboration"],
+                                    category: "Technology",
+                                        url: "https://www.atlassian.com/company/careers/students",
+                                            description: "Team collaboration software development."
+},
+{
+    id: 62,
+        title: "Bay Area Ridge Trail Council",
+            company: "Ridge Trail Council",
+                location: "Bay Area, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["High School Student", "Hiking Interest", "Trail Work"],
+                                    category: "STEM",
+                                        url: "https://ridgetrail.org/volunteer/",
+                                            description: "Trail maintenance and outdoor recreation."
+},
+{
+    id: 63,
+        title: "Roblox Game Development",
+            company: "Roblox",
+                location: "San Mateo, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Game Design", "Lua Programming"],
+                                    category: "Technology",
+                                        url: "https://corp.roblox.com/careers/students/",
+                                            description: "Gaming platform and metaverse development."
+},
+{
+    id: 64,
+        title: "SF Contemporary Jewish Museum",
+            company: "Contemporary Jewish Museum",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Cultural Interest", "Museum Education"],
+                                    category: "Arts",
+                                        url: "https://www.thecjm.org/get_involved",
+                                            description: "Museum education and cultural programming."
+},
+{
+    id: 65,
+        title: "EA Sports Game Development",
+            company: "Electronic Arts",
+                location: "Redwood City, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Game Design", "Programming"],
+                                    category: "Technology",
+                                        url: "https://www.ea.com/careers/students",
+                                            description: "Sports video game development and design."
+},
+{
+    id: 66,
+        title: "Marine Mammal Center Volunteer",
+            company: "Marine Mammal Center",
+                location: "Sausalito, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["Age 15+", "Marine Biology Interest", "Weekend Availability"],
+                                    category: "STEM",
+                                        url: "https://www.marinemammalcenter.org/get-involved/volunteer",
+                                            description: "Marine animal rescue and rehabilitation."
+},
+{
+    id: 67,
+        title: "Asana Product Internship",
+            company: "Asana",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Product Management", "Tech Interest"],
+                                    category: "Technology",
+                                        url: "https://asana.com/jobs/university",
+                                            description: "Project management software development."
+},
+{
+    id: 68,
+        title: "SF Botanical Garden Youth",
+            company: "SF Botanical Garden",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Botany Interest", "Outdoor Work"],
+                                    category: "STEM",
+                                        url: "https://www.sfbg.org/volunteer",
+                                            description: "Plant conservation and horticultural education."
+},
+{
+    id: 69,
+        title: "DoorDash Technology Internship",
+            company: "DoorDash",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Stipend",
+                                requirements: ["High School Senior", "Logistics Interest", "Programming"],
+                                    category: "Technology",
+                                        url: "https://careers.doordash.com/students/",
+                                            description: "Food delivery logistics and marketplace technology."
+},
+{
+    id: 70,
+        title: "Randall Museum Teen Program",
+            company: "Randall Museum",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Science/Arts Interest", "Ages 14-18"],
+                                    category: "STEM",
+                                        url: "https://www.randallmuseum.org/programs/teen-programs",
+                                            description: "Science and arts education for youth."
+},
+{
+    id: 71,
+        title: "Affirm Financial Technology",
+            company: "Affirm",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Fintech Interest", "Math Skills"],
+                                    category: "Technology",
+                                        url: "https://www.affirm.com/careers",
+                                            description: "Buy now, pay later technology development."
+},
+{
+    id: 72,
+        title: "Save The Bay Restoration",
+            company: "Save The Bay",
+                location: "Oakland, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Environmental Science", "Team Work"],
+                                    category: "STEM",
+                                        url: "https://savesanfranciscobay.org/volunteer",
+                                            description: "Wetland restoration and environmental advocacy."
+},
+{
+    id: 73,
+        title: "Instacart Engineering Internship",
+            company: "Instacart",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "E-commerce Interest", "Coding Skills"],
+                                    category: "Technology",
+                                        url: "https://www.instacart.com/company/careers/",
+                                            description: "Grocery delivery platform and logistics."
+},
+{
+    id: 74,
+        title: "SF War Memorial Performing Arts",
+            company: "War Memorial",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "Performing Arts", "Stage Interest"],
+                                    category: "Arts",
+                                        url: "https://sfwmpac.org/volunteer/",
+                                            description: "Theater operations and performing arts management."
+},
+{
+    id: 75,
+        title: "Zoom Video Technology",
+            company: "Zoom",
+                location: "San Jose, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Video Technology", "Programming"],
+                                    category: "Technology",
+                                        url: "https://careers.zoom.us/students",
+                                            description: "Video communications and collaboration tools."
+},
+{
+    id: 76,
+        title: "Coyote Point Museum Education",
+            company: "CuriOdyssey",
+                location: "San Mateo, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Science Education", "Ages 15-18"],
+                                    category: "STEM",
+                                        url: "https://www.curiodyssey.org/visit/volunteer/",
+                                            description: "Wildlife education and environmental science."
+},
+{
+    id: 77,
+        title: "Robinhood Financial Technology",
+            company: "Robinhood",
+                location: "Menlo Park, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Finance + Tech", "Trading Interest"],
+                                    category: "Technology",
+                                        url: "https://robinhood.com/careers",
+                                            description: "Stock trading platform and financial technology."
+},
+{
+    id: 78,
+        title: "Mission Science Workshop",
+            company: "Community Initiative",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "STEM Teaching", "Bilingual Preferred"],
+                                    category: "STEM",
+                                        url: "https://www.scienceworkshop.org/",
+                                            description: "Community science education for underserved youth."
+},
+{
+    id: 79,
+        title: "Notion Product Development",
+            company: "Notion",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Product Design", "UX Interest"],
+                                    category: "Technology",
+                                        url: "https://www.notion.so/careers",
+                                            description: "Productivity software and workspace tools."
+},
+{
+    id: 80,
+        title: "East Bay Regional Parks",
+            company: "East Bay Parks",
+                location: "Oakland, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Outdoors Work", "Physical Fitness"],
+                                    category: "STEM",
+                                        url: "https://www.ebparks.org/volunteer",
+                                            description: "Park ranger and environmental education."
+},
+{
+    id: 81,
+        title: "Zynga Game Design Internship",
+            company: "Zynga",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Mobile Gaming", "Design Skills"],
+                                    category: "Technology",
+                                        url: "https://www.zynga.com/careers/",
+                                            description: "Mobile game development and design."
+},
+{
+    id: 82,
+        title: "Cartoon Art Museum Teen Council",
+            company: "Cartoon Art Museum",
+                location: "San Francisco, CA",
+                    type: "Arts",
+                        duration: "School Year Program",
+                            compensation: "Volunteer",
+                                requirements: ["High School Student", "Art Interest", "Comics/Animation"],
+                                    category: "Arts",
+                                        url: "https://www.cartoonart.org/get-involved/",
+                                            description: "Comic art curation and museum programs."
+},
+{
+    id: 83,
+        title: "Plaid Financial Services",
+            company: "Plaid",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Fintech Interest", "API Knowledge"],
+                                    category: "Technology",
+                                        url: "https://plaid.com/careers/",
+                                            description: "Financial data connectivity and banking APIs."
+},
+{
+    id: 84,
+        title: "Habitot Children's Museum",
+            company: "Habitot",
+                location: "Berkeley, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Early Childhood Ed", "Ages 15-18"],
+                                    category: "STEM",
+                                        url: "https://www.habitot.org/volunteer",
+                                            description: "Early childhood education and museum facilitation."
+},
+{
+    id: 85,
+        title: "Chime Banking Technology",
+            company: "Chime",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Mobile Banking", "Programming"],
+                                    category: "Technology",
+                                        url: "https://www.chime.com/careers/",
+                                            description: "Digital banking and financial wellness technology."
+},
+{
+    id: 86,
+        title: "Peninsula Humane Society Youth",
+            company: "Peninsula Humane Society",
+                location: "Burlingame, CA",
+                    type: "Healthcare",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Volunteer",
+                                requirements: ["High School Student", "Animal Care", "Weekend Availability"],
+                                    category: "STEM",
+                                        url: "https://phs-spca.org/volunteer/",
+                                            description: "Animal shelter operations and veterinary care."
+},
+{
+    id: 87,
+        title: "Databricks Data Science",
+            company: "Databricks",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Data Analytics", "Python/SQL"],
+                                    category: "Technology",
+                                        url: "https://www.databricks.com/company/careers/university-recruiting",
+                                            description: "Big data analytics and machine learning platforms."
+},
+{
+    id: 88,
+        title: "Maker Faire Bay Area Youth",
+            company: "Make Community",
+                location: "San Mateo, CA",
+                    type: "Education",
+                        duration: "Event-Based (May 2026)",
+                            compensation: "Volunteer",
+                                requirements: ["High School Student", "Maker/Tech Interest", "Hands-on Skills"],
+                                    category: "STEM",
+                                        url: "https://makerfaire.com/volunteer/",
+                                            description: "Technology exhibitions and maker education."
+},
+{
+    id: 89,
+        title: "Coinbase Crypto Technology",
+            company: "Coinbase",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Benefits",
+                                requirements: ["High School Senior", "Blockchain Interest", "Crypto Knowledge"],
+                                    category: "Technology",
+                                        url: "https://www.coinbase.com/careers/students",
+                                            description: "Cryptocurrency exchange and blockchain technology."
+},
+{
+    id: 90,
+        title: "Lawrence Hall of Science Berkeley",
+            company: "UC Berkeley",
+                location: "Berkeley, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Science Education", "Public Speaking"],
+                                    category: "STEM",
+                                        url: "https://www.lawrencehallofscience.org/get-involved/volunteer/",
+                                            description: "Hands-on science education and exhibit demonstrations."
+},
+{
+    id: 91,
+        title: "Flexport Logistics Technology",
+            company: "Flexport",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Supply Chain Interest", "Tech Skills"],
+                                    category: "Technology",
+                                        url: "https://www.flexport.com/careers/university",
+                                            description: "Global logistics and freight technology."
+},
+{
+    id: 92,
+        title: "Filoli Historic House & Garden",
+            company: "Filoli",
+                location: "Woodside, CA",
+                    type: "Arts",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Stipend",
+                                requirements: ["High School Student", "History/Horticulture", "Customer Service"],
+                                    category: "Arts",
+                                        url: "https://filoli.org/support/volunteer/",
+                                            description: "Historic preservation and garden education."
+},
+{
+    id: 93,
+        title: "Gusto Payroll Technology",
+            company: "Gusto",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "HR Tech Interest", "Programming"],
+                                    category: "Technology",
+                                        url: "https://gusto.com/careers",
+                                            description: "Payroll and HR management software."
+},
+{
+    id: 94,
+        title: "SF Environment Youth Program",
+            company: "SF Environment Dept",
+                location: "San Francisco, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Sustainability", "SF Resident"],
+                                    category: "STEM",
+                                        url: "https://sfenvironment.org/get-involved",
+                                            description: "Urban sustainability and climate action projects."
+},
+{
+    id: 95,
+        title: "Benchling Biotech Software",
+            company: "Benchling",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (10 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "Biology + CS", "Life Sciences Interest"],
+                                    category: "Technology",
+                                        url: "https://www.benchling.com/careers/",
+                                            description: "Life sciences research software development."
+},
+{
+    id: 96,
+        title: "Computer History Museum Teen",
+            company: "Computer History Museum",
+                location: "Mountain View, CA",
+                    type: "Education",
+                        duration: "Summer 2026 (6 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Tech History Interest", "Ages 15-18"],
+                                    category: "Technology",
+                                        url: "https://computerhistory.org/get-involved/volunteer/",
+                                            description: "Technology history education and exhibit tours."
+},
+{
+    id: 97,
+        title: "Samsara IoT Technology",
+            company: "Samsara",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Senior", "IoT Interest", "Embedded Systems"],
+                                    category: "Technology",
+                                        url: "https://www.samsara.com/company/careers",
+                                            description: "Internet of Things and fleet management technology."
+},
+{
+    id: 98,
+        title: "SF Public Utilities Youth Corps",
+            company: "SFPUC",
+                location: "San Francisco, CA",
+                    type: "Conservation",
+                        duration: "Summer 2026 (8 weeks)",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Environmental Engineering", "SF Resident"],
+                                    category: "STEM",
+                                        url: "https://sfpuc.org/about-us/careers/youth-programs",
+                                            description: "Water conservation and sustainable infrastructure."
+},
+{
+    id: 99,
+        title: "Figma Product Design",
+            company: "Figma",
+                location: "San Francisco, CA",
+                    type: "Technology",
+                        duration: "Summer 2026 (12 weeks)",
+                            compensation: "Paid + Housing",
+                                requirements: ["High School Senior", "UI/UX Design", "Portfolio Required"],
+                                    category: "Technology",
+                                        url: "https://www.figma.com/careers/",
+                                            description: "Collaborative design tool and interface development."
+},
+{
+    id: 100,
+        title: "Exploratorium After Dark Youth",
+            company: "Exploratorium",
+                location: "San Francisco, CA",
+                    type: "Education",
+                        duration: "School Year Program",
+                            compensation: "Paid",
+                                requirements: ["High School Student", "Ages 16-18", "Evening Availability"],
+                                    category: "STEM",
+                                        url: "https://www.exploratorium.edu/visit/calendar/explainer-program",
+                                            description: "Adult-only evening science programs and demonstrations."
+}
+]
+
+export default function InternshipPage() {
+    const [selectedCategory, setSelectedCategory] = useState<string>('All')
+    const [selectedType, setSelectedType] = useState<string>('All')
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const itemsPerPage = 10
+
+    const categories = ['All', 'Technology', 'Business', 'Research', 'Arts', 'Healthcare', 'STEM']
+    const types = ['All', 'Internship', 'Research', 'Technology', 'Leadership', 'Program']
+
+    const filteredOpportunities = opportunities.filter(opp => {
+        const matchesCategory = selectedCategory === 'All' || opp.category === selectedCategory
+        const matchesType = selectedType === 'All' || opp.type === selectedType
+        return matchesCategory && matchesType
+    })
+
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedCategory, selectedType])
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredOpportunities.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const currentOpportunities = filteredOpportunities.slice(startIndex, endIndex)
+
+    // Page navigation functions
+    const goToPage = (page: number) => {
+        setCurrentPage(page)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const goToPreviousPage = () => {
+        if (currentPage > 1) goToPage(currentPage - 1)
+    }
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) goToPage(currentPage + 1)
+    }
+
+    return (
+        <div className="min-h-screen bg-slate-50">
+            {/* Navigation */}
+            <nav className="bg-white border-b border-slate-200 mb-6">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <Link href="/" className="flex items-center space-x-2">
+                        <Briefcase className="w-10 h-10 text-blue-600" />
+                    </Link>
+                    <div className="flex items-center space-x-4">
+                        <Link href="/dashboard" className="text-slate-600 hover:text-slate-900">Match Agent</Link>
+                        <Link href="/pathway" className="text-slate-600 hover:text-slate-900">Career Path Agent</Link>
+                        <Link href="/progress" className="text-slate-600 hover:text-slate-900">Progress Agent</Link>
+                        <Link href="/essay" className="text-slate-600 hover:text-slate-900">Essay Agent</Link>
+                        <Link href="/scholarship" className="text-slate-600 hover:text-slate-900">Scholarship Agent</Link>
+                        <Link href="/internship" className="text-slate-600 hover:text-slate-900 font-bold">Internship Agent</Link>
+                        <Link href="/competition" className="text-slate-600 hover:text-slate-900">Competition Agent</Link>
+                        <Link href="/club" className="text-slate-600 hover:text-slate-900">Club Agent</Link>
+                        <Link href="/financial-aid" className="text-slate-600 hover:text-slate-900">Financial Aid Agent</Link>
+                    </div>
+                </div>
+            </nav>
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                        Internship & Work Opportunities Agent
+                    </h1>
+                    <p className="text-slate-600 mb-4">Discover internships, research positions, and work opportunities to build your career</p>
+
+                    {/* High School Only Badge */}
+                    <div className="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg animate-pulse">
+                        <span className="font-bold text-lg">High School Student</span>
+                    </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <Card className="bg-blue-50 border-blue-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-blue-600 font-medium">Available Opportunities</p>
+                                    <p className="text-3xl font-bold text-blue-700">{opportunities.length}</p>
+                                </div>
+                                <Briefcase className="w-12 h-12 text-blue-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-green-50 border-green-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-green-600 font-medium">Top Companies</p>
+                                    <p className="text-3xl font-bold text-green-700">15</p>
+                                </div>
+                                <Building2 className="w-12 h-12 text-green-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-purple-50 border-purple-200">
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-purple-600 font-medium">Matched for You</p>
+                                    <p className="text-3xl font-bold text-purple-700">5</p>
+                                </div>
+                                <Briefcase className="w-12 h-12 text-purple-400 opacity-50" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Filters */}
+                <div className="mb-6 space-y-4">
+                    <div>
+                        <div className="flex items-center space-x-2 mb-3">
+                            <Filter className="w-5 h-5 text-slate-600" />
+                            <h3 className="font-semibold text-slate-900">Filter by Category</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {categories.map(category => (
+                                <Button
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    variant={selectedCategory === category ? "default" : "outline"}
+                                    className={selectedCategory === category
+                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                        : "text-slate-600"}
+                                >
+                                    {category}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center space-x-2 mb-3">
+                            <Filter className="w-5 h-5 text-slate-600" />
+                            <h3 className="font-semibold text-slate-900">Filter by Type</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {types.map(type => (
+                                <Button
+                                    key={type}
+                                    onClick={() => setSelectedType(type)}
+                                    variant={selectedType === type ? "default" : "outline"}
+                                    className={selectedType === type
+                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                        : "text-slate-600"}
+                                >
+                                    {type}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Opportunities List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {currentOpportunities.map((opportunity) => (
+                        <Card key={opportunity.id} className="hover:shadow-lg transition">
+                            <CardHeader>
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <CardTitle className="text-lg mb-2">{opportunity.title}</CardTitle>
+                                        <CardDescription className="text-sm text-slate-500">
+                                            {opportunity.company}
+                                        </CardDescription>
+                                    </div>
+                                    <div className="bg-blue-100 px-3 py-1 rounded-full">
+                                        <span className="text-sm font-semibold text-blue-700">{opportunity.category}</span>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <p className="text-sm text-slate-600">{opportunity.description}</p>
+
+                                    <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                        <MapPin className="w-4 h-4" />
+                                        <span>{opportunity.location}</span>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                        <Clock className="w-4 h-4" />
+                                        <span>{opportunity.duration}</span>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <DollarSign className="w-5 h-5 text-green-600" />
+                                        <span className="font-bold text-green-700 text-lg">{opportunity.compensation}</span>
+                                    </div>
+
+                                    <div>
+                                        <p className="text-sm font-semibold text-slate-700 mb-2">Requirements:</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {opportunity.requirements.map((req, i) => (
+                                                <span key={i} className="text-xs bg-slate-100 px-2 py-1 rounded-full text-slate-600">
+                                                    {req}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <a href={opportunity.url} target="_blank" rel="noopener noreferrer" className="block w-full">
+                                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                                            View Details
+                                        </Button>
+                                    </a>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="mt-8 flex flex-col items-center space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Button
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 1}
+                                variant="outline"
+                                className="px-3 py-2"
+                            >
+                                <ChevronLeft className="w-4 h-4 mr-1" />
+                                Previous
+                            </Button>
+
+                            <div className="flex items-center space-x-1">
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                    <Button
+                                        key={page}
+                                        onClick={() => goToPage(page)}
+                                        variant={currentPage === page ? "default" : "outline"}
+                                        className={`px-3 py-2 min-w-[40px] ${currentPage === page
+                                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                            : 'text-slate-600'
+                                            }`}
+                                    >
+                                        {page}
+                                    </Button>
+                                ))}
+                            </div>
+
+                            <Button
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages}
+                                variant="outline"
+                                className="px-3 py-2"
+                            >
+                                Next
+                                <ChevronRight className="w-4 h-4 ml-1" />
+                            </Button>
+                        </div>
+
+                        <p className="text-sm text-slate-600">
+                            Showing {startIndex + 1}-{Math.min(endIndex, filteredOpportunities.length)} of {filteredOpportunities.length} opportunities
+                        </p>
+                    </div>
+                )}
+
+                {/* Back to Home Button */}
+                <div className="mt-8 text-center">
+                    <Link href="/">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Home className="w-4 h-4 mr-2" /> MCP Server
+                        </Button>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    )
+}
