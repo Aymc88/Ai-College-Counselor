@@ -20,6 +20,7 @@ The platform features a team of **specialized agents** working in harmony to sup
 - **💼 Internship Agent**: Connects sophomores and juniors with verified high school internship programs and work opportunities in top companies.
 - **💸 Financial Aid Agent**: Demystifies the FAFSA, CSS Profile, and financial planning process with AI-guided checklists.
 - **🚀 Startups & Competitions Agent**: Curates a list of accelerators, incubators, and prestige competitions for ambitious student entrepreneurs.
+- **🤝 Club Agent**: Recommends high-impact club leadership opportunities and initiative ideas to strengthen your extracurricular profile.
 
 ## 🛠️ Technology Stack
 
