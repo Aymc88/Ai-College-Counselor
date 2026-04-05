@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI College Counselor
 
-## Getting Started
+Your personal AI-powered team for navigating the college admissions process.
 
-First, run the development server:
+![AI College Counselor](public/og-image.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**AI College Counselor** is a comprehensive multi-agent platform designed to democratize access to high-quality college counseling. By leveraging specialized AI agents, it helps students navigate every aspect of the admissions journey—from finding the perfect school match to crafting compelling essays and securing financial aid.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Specialized Agents
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The platform features a team of **specialized agents** working in harmony to support high school students:
 
-## Learn More
+- **📊 Match Agent**: Analyzes your academic profile (GPA, SAT/ACT) and preferences to recommend tailored *Safety*, *Match*, and *Reach* schools.
+- **✍️ Essay Agent**: Provides structural feedback and inspiration for personal statements, helping you tell your unique story.
+- **🗺️ Career Path Agent**: Maps your skills, MBTI, and interests to potential college majors and future career trajectories.
+- **📈 Progress Agent**: Visualizes your achievement timeline and compares it against successful student profiles to keep you on track.
+- **💰 Scholarship Agent**: Scans for financial aid opportunities and scholarships specifically tailored to your background.
+- **💼 Internship Agent**: Connects sophomores and juniors with verified high school internship programs and work opportunities in top companies.
+- **💸 Financial Aid Agent**: Demystifies the FAFSA, CSS Profile, and financial planning process with AI-guided checklists.
+- **🚀 Startups & Competitions Agent**: Curates a list of accelerators, incubators, and prestige competitions for ambitious student entrepreneurs.
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Technology Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Language**: TypeScript
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏁 Getting Started
 
-## Deploy on Vercel
+Follow these steps to run the project locally:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Aymc88/Ai-College-Counselor.git
+   cd Ai-College-Counselor
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to launch the AI College Counselor.
+
+## 🚀 Deployment
+
+The easiest way to deploy this app is using **Vercel**, the creators of Next.js.
+
+1. Push your code to your GitHub repository.
+2. Go to [Vercel](https://vercel.com) and import your project.
+3. Click **Deploy**. Vercel will automatically build and serve your application.
+
+## 📄 License
+
+This project is available for educational and personal use.
+
+---
+*Built with ❤️ for the future leaders of tomorrow.*
