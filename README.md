@@ -2,7 +2,7 @@
 
 Your personal AI-powered team for navigating the college admissions process.
 
-![AI College Counselor](public/og-image.png)
+[![AI College Counselor](public/og-image.png)](https://ai-college-counselor-v2.vercel.app)
 
 ## 🚀 Overview
 
