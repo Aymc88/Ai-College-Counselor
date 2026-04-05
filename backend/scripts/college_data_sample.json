@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "page": 0,
+    "total": 1983,
+    "per_page": 20
+  },
+  "results": [
+    {
+      "latest.student.size": 5726,
+      "latest.admissions.admission_rate.overall": 0.6622,
+      "latest.cost.tuition.in_state": 10024,
+      "latest.cost.tuition.out_of_state": 18634,
+      "latest.earnings.10_yrs_after_entry.median": 40628,
+      "school.name": "Alabama A & M University",
+      "school.city": "Normal",
+      "school.state": "AL",
+      "id": 100654
+    },
+    {
+      "latest.student.size": 12118,
+      "latest.admissions.admission_rate.overall": 0.8842,
+      "latest.cost.tuition.in_state": 8832,
+      "latest.cost.tuition.out_of_state": 21864,
+      "latest.earnings.10_yrs_after_entry.median": 54501,
+      "school.name": "University of Alabama at Birmingham",
+      "school.city": "Birmingham",
+      "school.state": "AL",
+      "id": 100663
+    },
+    {
+      "latest.student.size": 226,
+      "latest.admissions.admission_rate.overall": null,
+      "latest.cost.tuition.in_state": null,
+      "latest.cost.tuition.out_of_state": null,
+      "latest.earnings.10_yrs_after_entry.median": 37621,
+      "school.name": "Amridge University",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 100690
+    },
+    {
+      "latest.student.size": 6650,
+      "latest.admissions.admission_rate.overall": 0.7425,
+      "latest.cost.tuition.in_state": 11770,
+      "latest.cost.tuition.out_of_state": 24662,
+      "latest.earnings.10_yrs_after_entry.median": 61767,
+      "school.name": "University of Alabama in Huntsville",
+      "school.city": "Huntsville",
+      "school.state": "AL",
+      "id": 100706
+    },
+    {
+      "latest.student.size": 3322,
+      "latest.admissions.admission_rate.overall": 0.9564,
+      "latest.cost.tuition.in_state": 11248,
+      "latest.cost.tuition.out_of_state": 19576,
+      "latest.earnings.10_yrs_after_entry.median": 34502,
+      "school.name": "Alabama State University",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 100724
+    },
+    {
+      "latest.student.size": 32323,
+      "latest.admissions.admission_rate.overall": 0.7582,
+      "latest.cost.tuition.in_state": 11900,
+      "latest.cost.tuition.out_of_state": 33200,
+      "latest.earnings.10_yrs_after_entry.median": 59221,
+      "school.name": "The University of Alabama",
+      "school.city": "Tuscaloosa",
+      "school.state": "AL",
+      "id": 100751
+    },
+    {
+      "latest.student.size": 2407,
+      "latest.admissions.admission_rate.overall": null,
+      "latest.cost.tuition.in_state": null,
+      "latest.cost.tuition.out_of_state": null,
+      "latest.earnings.10_yrs_after_entry.median": 50273,
+      "school.name": "Athens State University",
+      "school.city": "Athens",
+      "school.state": "AL",
+      "id": 100812
+    },
+    {
+      "latest.student.size": 2693,
+      "latest.admissions.admission_rate.overall": 0.9263,
+      "latest.cost.tuition.in_state": 9436,
+      "latest.cost.tuition.out_of_state": 20092,
+      "latest.earnings.10_yrs_after_entry.median": 44391,
+      "school.name": "Auburn University at Montgomery",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 100830
+    },
+    {
+      "latest.student.size": 25732,
+      "latest.admissions.admission_rate.overall": 0.5047,
+      "latest.cost.tuition.in_state": 12536,
+      "latest.cost.tuition.out_of_state": 33944,
+      "latest.earnings.10_yrs_after_entry.median": 65337,
+      "school.name": "Auburn University",
+      "school.city": "Auburn",
+      "school.state": "AL",
+      "id": 100858
+    },
+    {
+      "latest.student.size": 713,
+      "latest.admissions.admission_rate.overall": 0.5194,
+      "latest.cost.tuition.in_state": 22750,
+      "latest.cost.tuition.out_of_state": 22750,
+      "latest.earnings.10_yrs_after_entry.median": 59481,
+      "school.name": "Birmingham-Southern College",
+      "school.city": "Birmingham",
+      "school.state": "AL",
+      "id": 100937
+    },
+    {
+      "latest.student.size": 302,
+      "latest.admissions.admission_rate.overall": null,
+      "latest.cost.tuition.in_state": 18238,
+      "latest.cost.tuition.out_of_state": 18238,
+      "latest.earnings.10_yrs_after_entry.median": 34421,
+      "school.name": "South University-Montgomery",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 101116
+    },
+    {
+      "latest.student.size": 1555,
+      "latest.admissions.admission_rate.overall": 0.6613,
+      "latest.cost.tuition.in_state": 23920,
+      "latest.cost.tuition.out_of_state": 23920,
+      "latest.earnings.10_yrs_after_entry.median": 43457,
+      "school.name": "Faulkner University",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 101189
+    },
+    {
+      "latest.student.size": 865,
+      "latest.admissions.admission_rate.overall": 0.7083,
+      "latest.cost.tuition.in_state": 28650,
+      "latest.cost.tuition.out_of_state": 28650,
+      "latest.earnings.10_yrs_after_entry.median": 49601,
+      "school.name": "Huntingdon College",
+      "school.city": "Montgomery",
+      "school.state": "AL",
+      "id": 101435
+    },
+    {
+      "latest.student.size": 63,
+      "latest.admissions.admission_rate.overall": 1,
+      "latest.cost.tuition.in_state": 11982,
+      "latest.cost.tuition.out_of_state": 11982,
+      "latest.earnings.10_yrs_after_entry.median": 42597,
+      "school.name": "Heritage Christian University",
+      "school.city": "Florence",
+      "school.state": "AL",
+      "id": 101453
+    },
+    {
+      "latest.student.size": 7030,
+      "latest.admissions.admission_rate.overall": 0.7622,
+      "latest.cost.tuition.in_state": 12426,
+      "latest.cost.tuition.out_of_state": 22716,
+      "latest.earnings.10_yrs_after_entry.median": 45235,
+      "school.name": "Jacksonville State University",
+      "school.city": "Jacksonville",
+      "school.state": "AL",
+      "id": 101480
+    },
+    {
+      "latest.student.size": 2666,
+      "latest.admissions.admission_rate.overall": 0.8711,
+      "latest.cost.tuition.in_state": 10990,
+      "latest.cost.tuition.out_of_state": 20090,
+      "latest.earnings.10_yrs_after_entry.median": 44232,
+      "school.name": "University of West Alabama",
+      "school.city": "Livingston",
+      "school.state": "AL",
+      "id": 101587
+    },
+    {
+      "latest.student.size": 1151,
+      "latest.admissions.admission_rate.overall": null,
+      "latest.cost.tuition.in_state": 12714,
+      "latest.cost.tuition.out_of_state": 12714,
+      "latest.earnings.10_yrs_after_entry.median": 32627,
+      "school.name": "Miles College",
+      "school.city": "Fairfield",
+      "school.state": "AL",
+      "id": 101675
+    },
+    {
+      "latest.student.size": 1079,
+      "latest.admissions.admission_rate.overall": 0.7251,
+      "latest.cost.tuition.in_state": 26120,
+      "latest.cost.tuition.out_of_state": 26120,
+      "latest.earnings.10_yrs_after_entry.median": 43611,
+      "school.name": "University of Mobile",
+      "school.city": "Mobile",
+      "school.state": "AL",
+      "id": 101693
+    },
+    {
+      "latest.student.size": 2087,
+      "latest.admissions.admission_rate.overall": 0.539,
+      "latest.cost.tuition.in_state": 13710,
+      "latest.cost.tuition.out_of_state": 26730,
+      "latest.earnings.10_yrs_after_entry.median": 42957,
+      "school.name": "University of Montevallo",
+      "school.city": "Montevallo",
+      "school.state": "AL",
+      "id": 101709
+    },
+    {
+      "latest.student.size": 5468,
+      "latest.admissions.admission_rate.overall": 0.9648,
+      "latest.cost.tuition.in_state": 11990,
+      "latest.cost.tuition.out_of_state": 22190,
+      "latest.earnings.10_yrs_after_entry.median": 45415,
+      "school.name": "University of North Alabama",
+      "school.city": "Florence",
+      "school.state": "AL",
+      "id": 101879
+    }
+  ]
+}
